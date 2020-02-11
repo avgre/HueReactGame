@@ -1,7 +1,7 @@
 const games = [
   {
     name: 'Red Light, Green Light',
-    img: '/images/redlight.jpg',
+    img: '/images/redlight.png',
     desc: [
       'Red means stop. Green means go. But you gotta hurry before time runs out!',
     ],
@@ -9,7 +9,7 @@ const games = [
   },
   {
     name: 'The Floor is Lava',
-    img: '/images/floorlava.jpeg',
+    img: '/images/floorlava.png',
     desc: [
       'Only your furniture can save you from the hot, bubbling, molten lava!',
     ],
@@ -17,7 +17,7 @@ const games = [
   },
   {
     name: 'Musical Chairs',
-    img: '/images/music.jpg',
+    img: '/images/music.png',
     desc: ['Now is your chance to show off those sweet dance moves!'],
     id: 2,
   },
