@@ -1,0 +1,32 @@
+state = {
+    hubIp: '192.168.1.1',
+    globalOptions: {
+        players: 2,
+        sound: 'on',
+    },
+    currentColor: 'red',
+    games: {
+        redlight: {
+            settings: {
+                time: 2, 
+            }
+        },
+        floorislava: {
+            settings: {
+                time: 8,
+            }
+        },
+        floorislava: {
+            settings: {
+                time: 8,
+            }
+        },
+    }
+}
+
+state.games[action.gameName]
+
+
+class RedLight {
+
+}

@@ -16,8 +16,6 @@ function reducer(state = initialState, action) {
   switch (action.type) {
     case 'SET_GAMES':
       return { ...state, games: action.payload };
-    case 'SET_GAMESETTINGS':
-      return { ...state, settings: action.payload };
     default:
       return state;
   }
