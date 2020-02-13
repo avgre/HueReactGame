@@ -5,6 +5,14 @@ const games = [
     desc: [
       'Red means stop. Green means go. But you gotta hurry before time runs out!',
     ],
+    settings: [{ Time: 2 }, { Players: 2 }, { sound: 'on' }],
+  },
+  {
+    name: 'Red Light, Green Light',
+    img: '/images/redlight.png',
+    desc: [
+      'Red means stop. Green means go. But you gotta hurry before time runs out!',
+    ],
     id: 0,
   },
   {
