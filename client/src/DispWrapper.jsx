@@ -12,6 +12,49 @@ const StyledDispWrapper = styled('div')`
     height: 92vh;
   }
 `;
+
+// store.js
+// function reducer(state, action) {
+//   switch (action.type {
+//     case 'INITIALIZE_GAME': {
+//       action.gameName
+//     }
+//   })
+// }
+
+function changeLightColor(color, hubIp) {
+  return fetch(hubIp, { method: 'PUT', body: { color } });
+}
+
+// // RedLight.jsx
+// class RedLight {
+//   componentDidMount() {
+//     const nextColor = this.props.currentColor === 'red' ? 'green' : 'red'l
+//     changeLightColor(nextColor, hubIp)
+//       .then(() => {
+//         this.props.dispatch({ type: 'CHANGE_COLOR', color: nextColor })
+//       })
+//     this.props.dispatch({
+//       type: 'INITIALIZE_GAME',
+//       gameName: 'redlight'
+//     })
+//   }
+//   render() {
+
+//   }
+// }
+
+const getCurrentGame = (pathname) => {
+  if (pathname === 'Red Light, Green Light') {
+    return StyledConsole;
+  } else if (pathname === 'The Floor is Lava') {
+    return StyledConsole;
+  } else if (pathname === 'Musical Chairs') {
+    return StyledConsole;
+  } else {
+    return StyledConsole;
+  }
+};
 class DispWrapper extends Component {
   render() {
     console.log(this.props);
