@@ -10,17 +10,7 @@ const StyledConsole = styled('div')`
     height: 92vh;
   }
 `;
-//const getSettingsForGame = (title) => {
-//  if (title === 'Red Light, Green Light') {
-//    return StyledConsole;
-//  } else if (title === 'The Floor is Lava') {
-//    return StyledConsole;
-//  } else if (title === 'Musical Chairs') {
-//    return StyledConsole;
-//  } else {
-//    return StyledConsole;
-//  }
-//};
+
 class Console extends Component {
   async componentDidMount() {
     let response = await fetch('/api/settings', {
@@ -33,7 +23,6 @@ class Console extends Component {
     });
   }
   render() {
-    //const Component = getComponentForType(this.props.id);
     return <StyledConsole></StyledConsole>;
   }
 }

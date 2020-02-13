@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Navbar from './GameNav.jsx';
 import GameMenu from './GameMenu.jsx';
-import DispWrapper from './DispWrapper.jsx';
+import RedLight from './RedLight.jsx';
 
 function App() {
   fetch('/api/hello')
@@ -12,7 +12,7 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Route path="/" exact component={GameMenu} />
-      <Route path="/RedLightGreenLight" exact component={DispWrapper} />
+      <Route path="/redlight" exact component={RedLight} />
     </BrowserRouter>
   );
 }

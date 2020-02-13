@@ -46,13 +46,13 @@ function changeLightColor(color, hubIp) {
 
 const getCurrentGame = (pathname) => {
   if (pathname === 'Red Light, Green Light') {
-    return StyledConsole;
+    return Console;
   } else if (pathname === 'The Floor is Lava') {
-    return StyledConsole;
+    return Console;
   } else if (pathname === 'Musical Chairs') {
-    return StyledConsole;
+    return Console;
   } else {
-    return StyledConsole;
+    return Console;
   }
 };
 class DispWrapper extends Component {
