@@ -10,6 +10,7 @@ const StyledSettings = styled('div')`
     height: 92vh;
   }
 `;
+
 class Settings extends Component {
   render() {
     return <StyledSettings></StyledSettings>;

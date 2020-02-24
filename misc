@@ -30,3 +30,32 @@ state.games[action.gameName]
 class RedLight {
 
 }
+
+
+games: {
+    redlight: {
+      settings: {
+        time: 2,
+      },
+    },
+    floorislava: {
+      settings: {
+        time: 6,
+      },
+    },
+    musicalchairs: {
+      settings: {
+        time: 8,
+      },
+    },
+  },
+
+  // store.js
+// function reducer(state, action) {
+//   switch (action.type {
+//     case 'INITIALIZE_GAME': {
+//       action.gameName
+//     }
+//   })
+// }
+

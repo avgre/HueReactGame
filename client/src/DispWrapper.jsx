@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Console from './Console.jsx';
 import Display from './Display.jsx';
+import RedLight from './RedLight.jsx';
 
 const StyledDispWrapper = styled('div')`
   && {
@@ -13,18 +14,34 @@ const StyledDispWrapper = styled('div')`
   }
 `;
 
-// store.js
-// function reducer(state, action) {
-//   switch (action.type {
-//     case 'INITIALIZE_GAME': {
-//       action.gameName
-//     }
-//   })
-// }
-
-function changeLightColor(color, hubIp) {
-  return fetch(hubIp, { method: 'PUT', body: { color } });
+const getCurrentGame = (pathname) => {
+  if (pathname === 'RedLight') {
+    return RedLight;
+  } else if (pathname === 'The Floor is Lava') {
+    return Display;
+  } else if (pathname === 'Musical Chairs') {
+    return Display;
+  } else {
+    return Display;
+  }
+};
+class DispWrapper extends Component {
+  render() {
+    const gamename = this.props.location.pathname;
+    const Game = getCurrentGame(gamename);
+    console.log(this.props);
+    return (
+      <StyledDispWrapper>
+        <Display>
+          <Game />
+        </Display>
+        <Console />
+      </StyledDispWrapper>
+    );
+  }
 }
+
+export default DispWrapper;
 
 // // RedLight.jsx
 // class RedLight {
@@ -40,31 +57,5 @@ function changeLightColor(color, hubIp) {
 //     })
 //   }
 //   render() {
-
 //   }
 // }
-
-const getCurrentGame = (pathname) => {
-  if (pathname === 'Red Light, Green Light') {
-    return Console;
-  } else if (pathname === 'The Floor is Lava') {
-    return Console;
-  } else if (pathname === 'Musical Chairs') {
-    return Console;
-  } else {
-    return Console;
-  }
-};
-class DispWrapper extends Component {
-  render() {
-    console.log(this.props);
-    return (
-      <StyledDispWrapper>
-        <Display />
-        <Console />
-      </StyledDispWrapper>
-    );
-  }
-}
-
-export default DispWrapper;

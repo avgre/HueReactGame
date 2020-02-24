@@ -8,40 +8,24 @@ const persistConfig = {
 };
 
 const initialState = {
-  hubIp: '192.168.8.2',
-  hubUsername: '',
+  hubAddress: 'https://192.168.8.2',
+  hubUsername: 'ljgib-WhZLVQlF75mM89U9ktZdpLQpahq8lI8ID7',
   gameName: '',
-  color:'',
   globalOptions: {
-      players: 2,
-      sound: 'on',
+    players: 2,
+    sound: 'on',
   },
-  currentColor: 'red',
-  games: {
-      redlight: {
-          settings: {
-              time: 2, 
-          }
-      },
-      floorislava: {
-          settings: {
-              time: 6,
-          }
-      },
-      musicalchairs: {
-          settings: {
-              time: 8,
-          }
-      },
-  }
-}
+  games: [],
+};
 
 function reducer(state = initialState, action) {
   switch (action.type) {
+    case 'SET_GAMES':
+      return { ...state, games: action.payload };
     case 'INITIALIZE_GAME':
       return { ...state, gameName: action.payload };
     case 'CHANGE_COLOR':
-      return { ...state, color: action.payload };
+      return { ...state, currentColor: action.payload };
     default:
       return state;
   }

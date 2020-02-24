@@ -12,16 +12,6 @@ const StyledConsole = styled('div')`
 `;
 
 class Console extends Component {
-  async componentDidMount() {
-    let response = await fetch('/api/settings', {
-      method: 'GET',
-    });
-    let json = await response.json();
-    this.props.dispatch({
-      type: 'SET_SETTINGS',
-      payload: json.settings,
-    });
-  }
   render() {
     return <StyledConsole></StyledConsole>;
   }

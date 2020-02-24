@@ -66,7 +66,6 @@ const StyledText = styled('div')`
 class GameBox extends Component {
   handleClick = (evt) => {
     evt.preventDefault();
-    console.log('hi');
   };
   render() {
     return (

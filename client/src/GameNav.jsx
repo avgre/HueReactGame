@@ -12,6 +12,7 @@ const StyledTitle = styled('div')`
     font-size: 30px;
     left: 3%;
     height: 8vh;
+    transform: translateY(25%);
   }
 `;
 const StyledNavbar = styled('div')`
@@ -25,7 +26,7 @@ const StyledNavbar = styled('div')`
   }
 `;
 
-function Navbar(props) {
+function Navbar() {
   return (
     <StyledNavbar>
       <StyledTitle>GAMES WITH HUE</StyledTitle>

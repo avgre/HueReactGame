@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Navbar from './GameNav.jsx';
 import GameMenu from './GameMenu.jsx';
+import DispWrapper from './DispWrapper.jsx';
 import RedLight from './RedLight.jsx';
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Route path="/" exact component={GameMenu} />
-      <Route path="/redlight" exact component={RedLight} />
+      <Route path="/RedLight" exact component={RedLight} />
+      <Route path="/FloorIsLava" exact component={DispWrapper} />
     </BrowserRouter>
   );
 }

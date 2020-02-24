@@ -13,7 +13,7 @@ const StyledGameMenu = styled('div')`
     z-index: 1;
     justify-content: space-between;
     width: auto;
-    height: 100%;
+    height: 92vh;
     padding-left: 50px;
     padding-right: 50px;
   }
@@ -21,6 +21,7 @@ const StyledGameMenu = styled('div')`
 
 class GameMenu extends Component {
   async componentDidMount() {
+    console.log(this.props.location.pathname);
     let response = await fetch('/api/games', {
       method: 'GET',
     });
