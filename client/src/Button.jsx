@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 const ButtonDefault = styled.button`
   background-color: #512da8ff;
+  position: relative;
+  display: inline-block;
+  z-index: 3;
   color: white;
   justify-content: center;
   padding-top: 5px;

@@ -42,20 +42,3 @@ class DispWrapper extends Component {
 }
 
 export default DispWrapper;
-
-// // RedLight.jsx
-// class RedLight {
-//   componentDidMount() {
-//     const nextColor = this.props.currentColor === 'red' ? 'green' : 'red'l
-//     changeLightColor(nextColor, hubIp)
-//       .then(() => {
-//         this.props.dispatch({ type: 'CHANGE_COLOR', color: nextColor })
-//       })
-//     this.props.dispatch({
-//       type: 'INITIALIZE_GAME',
-//       gameName: 'redlight'
-//     })
-//   }
-//   render() {
-//   }
-// }

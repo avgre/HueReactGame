@@ -1,38 +1,54 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import Console from './Console.jsx';
 import Button from './Button.jsx';
-
+const StyledDispWrapper = styled('div')`
+  && {
+    position: relative;
+    display: flex;
+    z-index: 1;
+    width: 100%;
+    height: 92vh;
+  }
+`;
 const Container = styled('div')`
   && {
     width: 70%;
     height: 92vh;
     position: relative;
-    background-image: url('/client/public/images/green.png');
+    background-image: url('/images/green.png');
+    background-size: 100% 100%;
   }
 `;
-
-const Animation = styled('div')`
+const Bulbie = styled('img')`
   && {
-    width: 50px;
-    height: 50px;
+    width: 150px;
+    height: 150px;
     position: absolute;
-    background: red;
+    transition: transform 500ms;
   }
 `;
 
 function changeLightColor(nextColor, hubUrl) {
-  console.log(hubUrl);
+  console.log(nextColor);
   if (nextColor === 'green') {
     return fetch(hubUrl, {
       method: 'PUT',
-      body: '{"hue":' + '20000' + ',' + '"sat":' + '254' + '}',
+      body: '{"transitiontime":' + 0 + ',"hue":' + 20000 + '}',
     });
   } else
     return fetch(hubUrl, {
       method: 'PUT',
-      body: '{"hue":' + '0' + ',' + '"sat":' + '254' + '}',
+      body: '{"transitiontime":' + 0 + ',"hue":' + 0 + '}',
     });
+}
+function chooseBulbie(currentColor) {
+  if (currentColor === 'green') {
+    return '/images/bulbies-blue-run.svg';
+  } else {
+    return '/images/bulbies-blue-handsup.svg';
+  }
 }
 
 class RedLight extends Component {
@@ -42,49 +58,38 @@ class RedLight extends Component {
     this.user = this.props.user;
     this.currentColor = this.props.currentColor;
   }
-  handleClick = (evt) => {
-    const hubUrl = this.hubIp + '/api/' + this.user + '/lights/1/state';
-    const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
-    changeLightColor(nextColor, hubUrl).then(() => {
-      this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
-    });
-    console.log(this.props);
-    console.log('next:' + nextColor);
-    console.log('current:' + this.props.currentColor);
-  };
   componentDidMount() {
-    //const hubUrl = this.hubIp + '/api/' + this.user + '/lights/1/state';
-    //const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
-    //changeLightColor(nextColor, hubUrl).then(() => {
-    //  this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
-    //});
     this.props.dispatch({
       type: 'INITIALIZE_GAME',
       payload: 'redlight',
     });
   }
-  //getUrlWithUsername() {
-  //  return this.props.hubIp + '/api/' + this.props.user + '/lights';
-  //}
+  handleClick = () => {
+    const hubUrl = this.hubIp + '/api/' + this.user + '/lights/1/state';
+    const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
 
-  //ToggleLightGreen(id) {
-  //  const bodyData = '{"hue":' + 26000 + '}';
-  //  this.changeState(id, bodyData);
-  //}
-  //ToggleLightRed(id) {
-  //  const bodyData = '{"hue":' + 25600 + '}';
-  //  this.changeState(id, bodyData);
-  // }
+    changeLightColor(nextColor, hubUrl).then(() => {
+      this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
+    });
+  };
   render() {
+    const characterPosition = this.props.currentColor === 'green' ? 0 : 100;
     return (
-      <Container>
-        <Animation />
-        <Button onClick={this.handleClick}>Change</Button>
-      </Container>
+      <StyledDispWrapper>
+        <Container>
+          <Bulbie
+            fill={'none'}
+            src={chooseBulbie(this.props.currentColor)}
+            style={{ transform: `translate(${characterPosition}px)` }}
+          />
+        </Container>
+        <Console
+          children={<Button onClick={this.handleClick}>Change</Button>}
+        />
+      </StyledDispWrapper>
     );
   }
 }
-
 const mapStateToProps = (state) => {
   return {
     hubIp: state.hubAddress,
@@ -94,3 +99,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(RedLight);
+
+//changeLightColor(nextColor, hubUrl).then(() => {
+//  this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
+//});
