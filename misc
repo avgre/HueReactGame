@@ -59,3 +59,53 @@ games: {
 //   })
 // }
 
+changeLightColor(nextColor, hubUrl).then(() => {
+        this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
+      });
+
+      window.setTimeout(() => {
+      const hubUrl = this.hubIp + '/api/' + this.user + '/lights/1/state';
+      const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
+      changeLightColor(nextColor, hubUrl).then(() => {
+        this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
+      });
+      this.updateOnRandomInterval();
+    }, timeUntilNextRender);
+
+
+    for (let i = 0; i < segments; i++) {
+      
+      console.log('currentTime:' + this.state.currentTime);
+      console.log('currentPos:' + this.state.currentPos);
+      this.updateOnRandomInterval();
+    }
+
+for loop has 6 segments
+ each segment has to run based on timeSegments array
+ as each loop starts, a set timeout function 
+
+ let finalPos = 800;
+    let segments = 6;
+    let timeSegments = divideSegments(70000, segments, 60);
+    console.log(timeSegments);
+    let posSegments = divideSegments(finalPos, segments, 80);
+
+startGame = () => {
+    console.log(this.state);
+    for (let i = 0; i < 6; ++i) {
+      (function(n) {
+        setTimeout(function() {
+          console.log(n);
+          this.setState({
+            deltaTime: this.state.timeSegments[n],
+            deltaPos: this.state.posSegments[n],
+            currentTime: this.state.currentTime + this.state.deltaTime,
+            currentPos: this.state.currentPos + this.state.deltaPos,
+          });
+        }, 1000);
+      })(i);
+    }
+  };
+
+
+  //transition: transform 2000ms;
