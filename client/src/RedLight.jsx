@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Console from './Console.jsx';
 import Button from './Button.jsx';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+const Timer = styled(CountdownCircleTimer)`
+  && {
+  }
+`;
 
 const StyledDispWrapper = styled('div')`
   && {
@@ -22,39 +28,104 @@ const Container = styled('div')`
     background-size: 100% 100%;
   }
 `;
-
-const Bulbie = styled('img')`
-  && {
-    z-index: 5;
-    width: 160px;
-    height: 160px;
-    position: absolute;
-    top: 500px;
-    transition: transform 5000ms;
-  }
+const AnimationDiv1 = styled('div')`
+  width: 160px;
+  height: 160px;
+  top: 500px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
-const Bulbie2 = styled('img')`
-  && {
-    padding: 30px;
-    z-index: 4;
-    width: 100px;
-    height: 100px;
-    position: absolute;
-    top: 350px;
-    transition: transform 5000ms;
-  }
+const AnimationDiv2 = styled('div')`
+  width: 160px;
+  height: 160px;
+  top: 350px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
-const Bulbie3 = styled('img')`
+const AnimationDiv3 = styled('div')`
+  width: 160px;
+  height: 160px;
+  top: 220px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const run3 = keyframes`
+      100% {
+        background-position: 880px;
+      }
+`;
+const YellowBulbie = styled('div')`
   && {
-    padding: 20px;
     z-index: 3;
+    transform: scale(0.65);
+    width: 110px;
+    height: 155px;
+    background-image: url('/images/yellow-animation-stop.svg');
+    animation: ${run3} 1.6s steps(8) infinite;
+  }
+`;
+const run2 = keyframes`
+      100% {
+        background-position: 960px;
+      }
+`;
+const PinkBulbie = styled('div')`
+  && {
+    z-index: 4;
+    transform: scale(0.75);
     width: 120px;
     height: 120px;
-    position: absolute;
-    top: 220px;
-    transition: transform 5000ms;
+    background-image: url('/images/pink-animation-stop.svg');
+    animation: ${run2} 1s steps(8) infinite;
+    border: none;
   }
 `;
+
+const run = keyframes`
+      100% {
+        background-position: 800px;
+      }
+`;
+const BlueBulbie = styled('div')`
+  && {
+    z-index: 5;
+    transform: scale(1.1);
+    width: 100px;
+    height: 145px;
+    background-image: url('/images/blue-animation-stop.svg');
+    animation: ${run} 1s steps(8) infinite;
+    border: none;
+  }
+`;
+
+function chooseBulbie(currentColor, id) {
+  if (currentColor === 'green' && id === 1) {
+    return '/images/blue-animation-run.svg';
+  } else if (currentColor === 'red' && id === 1) {
+    return '/images/blue-animation-stop.svg';
+  } else if (currentColor === 'green' && id === 2) {
+    return '/images/pink-animation-run.svg';
+  } else if (currentColor === 'red' && id === 2) {
+    return '/images/pink-animation-stop.svg';
+  } else if (currentColor === 'green' && id === 3) {
+    return '/images/yellow-animation-run.svg';
+  } else if (currentColor === 'red' && id === 3) {
+    return '/images/yellow-animation-stop.svg';
+  }
+}
+function chooseBg(currentColor) {
+  if (currentColor === 'green') {
+    return '/images/green.png';
+  } else if (currentColor === 'red') {
+    return '/images/red.png';
+  }
+}
 
 function divideSegments(number, parts, min) {
   const randombit = number - min * parts;
@@ -114,21 +185,6 @@ function changeLightColor(nextColor, hubUrl) {
     });
 }
 
-function chooseBulbie(currentColor, id) {
-  if (currentColor === 'green' && id === 1) {
-    return '/images/blue-run.svg';
-  } else if (currentColor === 'red' && id === 1) {
-    return '/images/blue-handsup.svg';
-  } else if (currentColor === 'green' && id === 2) {
-    return '/images/pink-run.svg';
-  } else if (currentColor === 'red' && id === 2) {
-    return '/images/pink-handsup.svg';
-  } else if (currentColor === 'green' && id === 3) {
-    return '/images/yellow-run.svg';
-  } else if (currentColor === 'red' && id === 3) {
-    return '/images/yellow-handsup.svg';
-  }
-}
 class RedLight extends Component {
   constructor(props) {
     super(props);
@@ -152,7 +208,13 @@ class RedLight extends Component {
       type: 'INITIALIZE_GAME',
       payload: 'redlight',
     });
-    let segments = 9;
+    changeLightColor(
+      'red',
+      this.hubIp + '/api/' + this.user + '/lights/1/state'
+    ).then(() => {
+      this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
+    });
+    let segments = 6;
     this.setState({
       timeSegments: addZero(
         sumArray(addDelay(divideSegments(30000, segments, 500)))
@@ -182,12 +244,6 @@ class RedLight extends Component {
   //};
 
   startGame = () => {
-    changeLightColor(
-      'red',
-      this.hubIp + '/api/' + this.user + '/lights/1/state'
-    ).then(() => {
-      this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
-    });
     console.log(this.state);
     function loopDone() {
       console.log('The game is done!');
@@ -234,28 +290,57 @@ class RedLight extends Component {
       this.props.currentColor === 'green' ? this.state.deltaTime : 2000;
     return (
       <StyledDispWrapper>
-        <Container id="wrapper">
-          <Bulbie
-            src={chooseBulbie(this.props.currentColor, 1)}
+        <Container
+          id="wrapper"
+          style={{
+            backgroundImage: `url(${chooseBg(this.props.currentColor)})`,
+          }}
+        >
+          <AnimationDiv1
             style={{
               transition: `transform ${timing}ms linear`,
               transform: `translate(${characterPosition1}px)`,
             }}
-          />
-          <Bulbie2
-            src={chooseBulbie(this.props.currentColor, 2)}
+          >
+            <BlueBulbie
+              style={{
+                backgroundImage: `url(${chooseBulbie(
+                  this.props.currentColor,
+                  1
+                )})`,
+              }}
+            />
+          </AnimationDiv1>
+          <AnimationDiv2
             style={{
               transition: `transform ${timing}ms linear`,
               transform: `translate(${characterPosition2}px)`,
             }}
-          />
-          <Bulbie3
-            src={chooseBulbie(this.props.currentColor, 3)}
+          >
+            <PinkBulbie
+              style={{
+                backgroundImage: `url(${chooseBulbie(
+                  this.props.currentColor,
+                  2
+                )})`,
+              }}
+            />
+          </AnimationDiv2>
+          <AnimationDiv3
             style={{
               transition: `transform ${timing}ms linear`,
               transform: `translate(${characterPosition3}px)`,
             }}
-          />
+          >
+            <YellowBulbie
+              style={{
+                backgroundImage: `url(${chooseBulbie(
+                  this.props.currentColor,
+                  3
+                )})`,
+              }}
+            />
+          </AnimationDiv3>
         </Container>
         <Console children={<Button onClick={this.startGame}>PLAY</Button>} />
       </StyledDispWrapper>

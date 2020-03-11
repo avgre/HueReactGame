@@ -12,7 +12,7 @@ const StyledTitle = styled('div')`
     font-size: 30px;
     left: 3%;
     height: 8vh;
-    transform: translateY(25%);
+    transform: translateY(20%);
   }
 `;
 const StyledNavbar = styled('div')`
