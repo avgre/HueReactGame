@@ -6,8 +6,11 @@ const StyledWrapper = styled('div')`
   && {
     padding-top: 40px;
     position: relative;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    overflow: hidden;
     text-align: center;
     width: 380px;
     height: 440px;
@@ -50,8 +53,7 @@ const StyledText = styled('div')`
   && {
     display: inline-block;
     padding-bottom: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Montserrat';
     color: white;
     padding-left: 30px;
     padding-right: 30px;

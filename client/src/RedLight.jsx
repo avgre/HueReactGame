@@ -3,106 +3,6 @@ import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Console from './Console.jsx';
-import Button from './Button.jsx';
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-const Timer = styled(CountdownCircleTimer)`
-  && {
-  }
-`;
-
-const StyledDispWrapper = styled('div')`
-  && {
-    position: relative;
-    display: flex;
-    z-index: 1;
-    width: 100%;
-    height: 92vh;
-  }
-`;
-const Container = styled('div')`
-  && {
-    min-width: 1200px;
-    height: 92vh;
-    position: relative;
-    background-image: url('/images/green.png');
-    background-size: 100% 100%;
-  }
-`;
-const AnimationDiv1 = styled('div')`
-  width: 160px;
-  height: 160px;
-  top: 500px;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const AnimationDiv2 = styled('div')`
-  width: 160px;
-  height: 160px;
-  top: 350px;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const AnimationDiv3 = styled('div')`
-  width: 160px;
-  height: 160px;
-  top: 220px;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const run3 = keyframes`
-      100% {
-        background-position: 880px;
-      }
-`;
-const YellowBulbie = styled('div')`
-  && {
-    z-index: 3;
-    transform: scale(0.65);
-    width: 110px;
-    height: 155px;
-    background-image: url('/images/yellow-animation-stop.svg');
-    animation: ${run3} 1.6s steps(8) infinite;
-  }
-`;
-const run2 = keyframes`
-      100% {
-        background-position: 960px;
-      }
-`;
-const PinkBulbie = styled('div')`
-  && {
-    z-index: 4;
-    transform: scale(0.75);
-    width: 120px;
-    height: 120px;
-    background-image: url('/images/pink-animation-stop.svg');
-    animation: ${run2} 1s steps(8) infinite;
-    border: none;
-  }
-`;
-
-const run = keyframes`
-      100% {
-        background-position: 800px;
-      }
-`;
-const BlueBulbie = styled('div')`
-  && {
-    z-index: 5;
-    transform: scale(1.1);
-    width: 100px;
-    height: 145px;
-    background-image: url('/images/blue-animation-stop.svg');
-    animation: ${run} 1s steps(8) infinite;
-    border: none;
-  }
-`;
 
 function chooseBulbie(currentColor, id) {
   if (currentColor === 'green' && id === 1) {
@@ -119,14 +19,18 @@ function chooseBulbie(currentColor, id) {
     return '/images/yellow-animation-stop.svg';
   }
 }
-function chooseBg(currentColor) {
-  if (currentColor === 'green') {
-    return '/images/green.png';
-  } else if (currentColor === 'red') {
-    return '/images/red.png';
+
+function chooseObjColor(currentColor, object) {
+  if (currentColor === 'green' && object === 'stoplight') {
+    return '/images/greenlight.svg';
+  } else if (currentColor === 'red' && object === 'stoplight') {
+    return '/images/redlight.svg';
+  } else if (currentColor === 'red' && object === 'blimp') {
+    return '/images/blimpstop.svg';
+  } else if (currentColor === 'green' && object === 'blimp') {
+    return '/images/blimpgo.svg';
   }
 }
-
 function divideSegments(number, parts, min) {
   const randombit = number - min * parts;
   const out = [];
@@ -135,14 +39,13 @@ function divideSegments(number, parts, min) {
   }
   const mult =
     randombit /
-    out.reduce(function(a, b) {
+    out.reduce(function (a, b) {
       return a + b;
     });
-  return out.map(function(el) {
+  return out.map(function (el) {
     return el * mult + min;
   });
 }
-
 function addDelay(array, type) {
   let delay = 2000;
   if (type === 'pos') {
@@ -153,7 +56,6 @@ function addDelay(array, type) {
     .reduce((a, b) => a.concat(b));
   return newArr;
 }
-
 function sumArray(array) {
   const result = array.reduce((acc, item, index) => {
     if (index === 0) {
@@ -165,24 +67,13 @@ function sumArray(array) {
   }, []);
   return result;
 }
-
-function addZero(array) {
-  array.unshift(0);
+function addZero(array, type) {
+  let delay = 0;
+  if (type === 'time') {
+    delay = 2000;
+  }
+  array.unshift(delay);
   return array;
-}
-
-function changeLightColor(nextColor, hubUrl) {
-  console.log(nextColor);
-  if (nextColor === 'green') {
-    return fetch(hubUrl, {
-      method: 'PUT',
-      body: '{"transitiontime":' + 0 + ',"hue":' + 20000 + '}',
-    });
-  } else
-    return fetch(hubUrl, {
-      method: 'PUT',
-      body: '{"transitiontime":' + 0 + ',"hue":' + 0 + '}',
-    });
 }
 
 class RedLight extends Component {
@@ -200,6 +91,7 @@ class RedLight extends Component {
       currentPos3: 0,
       nextPos3: 0,
       deltaTime: 0,
+      gameStart: false,
     };
   }
   componentDidMount() {
@@ -208,46 +100,60 @@ class RedLight extends Component {
       type: 'INITIALIZE_GAME',
       payload: 'redlight',
     });
-    changeLightColor(
+    this.changeLightColor(
       'red',
       this.hubIp + '/api/' + this.user + '/lights/1/state'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
-    let segments = 6;
+    let segments = 8;
+
     this.setState({
+      segments: segments,
       timeSegments: addZero(
-        sumArray(addDelay(divideSegments(30000, segments, 500)))
+        sumArray(addDelay(divideSegments(14000, segments, 1000))),
+        'time'
       ),
       posSegments1: addZero(
-        sumArray(addDelay(divideSegments(1000, segments, 200), 'pos'))
+        sumArray(addDelay(divideSegments(1100, segments, 200), 'pos'))
       ),
       posSegments2: addZero(
-        sumArray(addDelay(divideSegments(1000, segments, 100), 'pos'))
+        sumArray(addDelay(divideSegments(1100, segments, 100), 'pos'))
       ),
       posSegments3: addZero(
-        sumArray(addDelay(divideSegments(1000, segments, 25), 'pos'))
+        sumArray(addDelay(divideSegments(1100, segments, 25), 'pos'))
       ),
     });
   }
-
-  //handleTick = () => {
-  // get current time index
-  // Process
-  //const nextSegmentIndex = this.state.segmentIndex + 1;
-
-  //this.setState({
-  //  segmentIndex: nextSegmentIndex,
-  //});
-
-  //this.timeoutId = this.setTimeout(this.handleTick, this.state.timeSegments[nextSegmentIndex]);
-  //};
-
+  changeLightColor(nextColor, hubUrl) {
+    console.log(nextColor);
+    if (nextColor === 'green') {
+      return fetch(hubUrl, {
+        method: 'PUT',
+        body: '{"transitiontime":' + 0 + ',"hue":' + 20000 + '}',
+      });
+    } else
+      return fetch(hubUrl, {
+        method: 'PUT',
+        body: '{"transitiontime":' + 0 + ',"hue":' + 0 + '}',
+      });
+  }
+  loopDone = () => {
+    console.log('The game is done!');
+    this.changeLightColor(
+      'red',
+      this.hubIp + '/api/' + this.user + '/lights/1/state'
+    ).then(() => {
+      this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
+    });
+  };
   startGame = () => {
-    console.log(this.state);
-    function loopDone() {
-      console.log('The game is done!');
-    }
+    this.setState(
+      { gameStart: true, totalTime: this.state.segments * 2 - 1 },
+      () => {
+        console.log(this.state);
+      }
+    );
     for (let i = 1; i < this.state.timeSegments.length; i++) {
       //let timeouId =
       setTimeout(() => {
@@ -261,13 +167,19 @@ class RedLight extends Component {
           deltaTime:
             this.state.timeSegments[i] - this.state.timeSegments[i - 1],
         });
+
         const hubUrl = this.hubIp + '/api/' + this.user + '/lights/1/state';
         const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
-        changeLightColor(nextColor, hubUrl).then(() => {
+        this.changeLightColor(nextColor, hubUrl).then(() => {
+          console.log(this.state);
           this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
         });
+
+        if (i === this.state.timeSegments.length - 1) {
+          i = i + 1;
+        }
         if (i === this.state.timeSegments.length) {
-          setTimeout(loopDone, 1000);
+          setTimeout(this.loopDone, 2000);
         }
       }, this.state.timeSegments[i]);
     }
@@ -290,12 +202,29 @@ class RedLight extends Component {
       this.props.currentColor === 'green' ? this.state.deltaTime : 2000;
     return (
       <StyledDispWrapper>
-        <Container
-          id="wrapper"
-          style={{
-            backgroundImage: `url(${chooseBg(this.props.currentColor)})`,
-          }}
-        >
+        <Container id="wrapper">
+          <Stoplight
+            style={{
+              backgroundImage: `url(${chooseObjColor(
+                this.props.currentColor,
+                'stoplight'
+              )})`,
+            }}
+          ></Stoplight>
+          {this.state.gameStart === true ? (
+            <BlimpBox>
+              <Blimp
+                style={{
+                  backgroundImage: `url(${chooseObjColor(
+                    this.props.currentColor,
+                    'blimp'
+                  )})`,
+                }}
+              ></Blimp>
+            </BlimpBox>
+          ) : (
+            <div></div>
+          )}
           <AnimationDiv1
             style={{
               transition: `transform ${timing}ms linear`,
@@ -342,11 +271,180 @@ class RedLight extends Component {
             />
           </AnimationDiv3>
         </Container>
-        <Console children={<Button onClick={this.startGame}>PLAY</Button>} />
+        <Console
+          isRunning={this.state.gameStart}
+          gameName="redlight"
+          handleStartGame={this.startGame}
+          duration={30}
+          timerColor={
+            this.props.currentColor === 'green' ? '#008000' : '#FF0000'
+          }
+        />
       </StyledDispWrapper>
     );
   }
 }
+const StyledDispWrapper = styled('div')`
+  && {
+    position: relative;
+    display: flex;
+    z-index: 1;
+    width: 100%;
+    height: 92vh;
+  }
+`;
+const Container = styled('div')`
+  && {
+    min-width: 1300px;
+    height: 92vh;
+    position: relative;
+    background-image: url('/images/redlightbg.png');
+    background-size: 100% 100%;
+  }
+`;
+const AnimationDiv1 = styled('div')`
+  width: 160px;
+  height: 160px;
+  top: 600px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const AnimationDiv2 = styled('div')`
+  width: 160px;
+  height: 160px;
+  top: 460px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const AnimationDiv3 = styled('div')`
+  width: 160px;
+  height: 160px;
+  top: 350px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const run = keyframes`
+100% {
+  background-position: 800px;
+}
+`;
+const run2 = keyframes`
+      100% {
+        background-position: 960px;
+      }
+`;
+const run3 = keyframes`
+      100% {
+        background-position: 880px;
+      }
+`;
+const PinkBulbie = styled('div')`
+  && {
+    z-index: 4;
+    transform: scale(0.7);
+    top: 200px;
+    width: 120px;
+    height: 120px;
+    background-image: url('/images/pink-animation-stop.svg');
+    animation: ${run2} 1s steps(8) infinite;
+    border: none;
+  }
+`;
+const YellowBulbie = styled('div')`
+  && {
+    z-index: 10;
+    transform: scale(0.65);
+    width: 110px;
+    height: 155px;
+    background-image: url('/images/yellow-animation-stop.svg');
+    animation: ${run3} 1.6s steps(8) infinite;
+  }
+`;
+const BlueBulbie = styled('div')`
+  && {
+    z-index: 5;
+    transform: scale(1.1);
+    width: 100px;
+    height: 145px;
+    background-image: url('/images/blue-animation-stop.svg');
+    animation: ${run} 1s steps(8) infinite;
+
+    border: none;
+  }
+`;
+const blink = keyframes`
+      100% {
+        background-position: 400px;
+      }
+`;
+function getRandom(min, max) {
+  const random = Math.random() * (max - min) + min;
+  console.log(random);
+  return random;
+}
+function blimpfly() {
+  const fly = keyframes`
+    0% {
+      transform: translate(0px, ${getRandom(10, 60)}px);
+    }
+    25% {
+      transform: translate(400px, ${getRandom(10, 60)}px);   
+       }
+    50% {
+      transform: translate(800px, ${getRandom(10, 60)}px);
+    }
+    75% {
+      transform: translate(1200px, ${getRandom(10, 60)}px);   
+    }
+    100% {
+      transform: translate(1600px, ${getRandom(10, 60)}px);   
+    }
+  `;
+  return fly;
+}
+const BlimpBox = styled('div')`
+  && {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 6;
+    animation: ${blimpfly()} 15s linear infinite;
+    border: none;
+    top: 10px;
+    left: -200px;
+    height: 100px;
+    width: 200px;
+  }
+`;
+const Blimp = styled('div')`
+  && {
+    height: 100px;
+    width: 200px;
+    background-image: url('/images/blimpstop.svg');
+    animation: ${blink} 1s steps(2) infinite;
+    border: none;
+  }
+`;
+const Stoplight = styled('div')`
+  && {
+    top: 270px;
+    left: 700px;
+    position: absolute;
+    width: 90px;
+    height: 140px;
+    background-image: url('/images/redlight.svg');
+    background-size: 100% 100%;
+    border: none;
+  }
+`;
+
 const mapStateToProps = (state) => {
   return {
     hubIp: state.hubAddress,
@@ -356,3 +454,15 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(RedLight);
+
+//handleTick = () => {
+// get current time index
+// Process
+//const nextSegmentIndex = this.state.segmentIndex + 1;
+
+//this.setState({
+//  segmentIndex: nextSegmentIndex,
+//});
+
+//this.timeoutId = this.setTimeout(this.handleTick, this.state.timeSegments[nextSegmentIndex]);
+//};

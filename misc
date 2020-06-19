@@ -111,3 +111,16 @@ startGame = () => {
   //transition: transform 2000ms;
 
   
+  const blimptiming =
+      this.props.currentColor === 'green' ? this.state.altdeltaTime : 2000;
+    const blimpPos =
+      this.props.currentColor === 'green'
+        ? this.state.currentBlimpPos
+        : this.state.nextBlimpPos;
+
+
+        {this.state.gameStart === true ? (
+
+          ) : (
+            <div></div>
+          )}

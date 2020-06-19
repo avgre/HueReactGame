@@ -3,19 +3,21 @@ import styled from 'styled-components';
 const ButtonDefault = styled.button`
   background-color: #512da8ff;
   position: relative;
-  display: inline-block;
+  display: flex;
   z-index: 3;
   color: white;
   justify-content: center;
-  padding-top: 5px;
-  padding-left: 35px;
-  padding-right: 35px;
-  padding-bottom: 5px;
+  align-content: center;
+  padding-top: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 10px;
   border: solid;
+  width: 150px;
   border-color: white;
   border-width: 1px;
   border-radius: 45px;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
   &:hover {
     background: #1ed23eff;
@@ -23,13 +25,10 @@ const ButtonDefault = styled.button`
   }
 `;
 const PlayButton = styled('div')`
-  display: inline-block;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-left: 8px solid;
-  padding-right: 4px;
-  &:hover {
-  }
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  border-left: 16px solid;
+  padding-right: 8px;
 `;
 
 const StartButton = styled(ButtonDefault)`
