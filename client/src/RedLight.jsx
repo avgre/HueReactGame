@@ -102,7 +102,7 @@ class RedLight extends Component {
     });
     this.changeLightColor(
       'red',
-      this.hubIp + '/api/' + this.user + '/lights/1/state'
+      this.hubIp + '/api/' + this.user + '/groups/6/action'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
@@ -142,7 +142,7 @@ class RedLight extends Component {
     console.log('The game is done!');
     this.changeLightColor(
       'red',
-      this.hubIp + '/api/' + this.user + '/lights/1/state'
+      this.hubIp + '/api/' + this.user + '/groups/6/action'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
@@ -168,13 +168,11 @@ class RedLight extends Component {
             this.state.timeSegments[i] - this.state.timeSegments[i - 1],
         });
 
-        const hubUrl = this.hubIp + '/api/' + this.user + '/lights/1/state';
+        const hubUrl = this.hubIp + '/api/' + this.user + '/groups/6/action';
         const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
         this.changeLightColor(nextColor, hubUrl).then(() => {
-          console.log(this.state);
           this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
         });
-
         if (i === this.state.timeSegments.length - 1) {
           i = i + 1;
         }
