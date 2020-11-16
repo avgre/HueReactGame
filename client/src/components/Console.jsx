@@ -10,9 +10,9 @@ const renderTime = ({ remainingTime }) => {
   }
   return (
     <Timer>
-      <Text>Remaining</Text>
+      <span>Remaining</span>
       <Value>{remainingTime}</Value>
-      <Text>seconds</Text>
+      <span>seconds</span>
     </Timer>
   );
 };
@@ -23,13 +23,14 @@ class Console extends Component {
       <StyledConsole>
         {this.props.gameName === 'redlight' && (
           <>
-            <div>
+            <Title>
               <StyledTitle>Red Light, Green Light</StyledTitle>
               <Desc>
                 Red means stop. Green means go. But you gotta hurry before time
                 runs out!
               </Desc>
-            </div>
+            </Title>
+
             <TimerWrapper>
               <CountdownCircleTimer
                 isPlaying={this.props.isRunning}
@@ -59,50 +60,50 @@ const Value = styled('div')`
   color: white;
 `;
 const Timer = styled('div')`
-  font-family: 'Montserrat';
+  font-family: 'Open Sans', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-const Text = styled('div')`
   color: white;
 `;
+
 const StyledConsole = styled('div')`
-  && {
-    position: relative;
-    background: #5133a6;
-    min-width: 300px;
-    z-index: 6;
-    height: 92vh;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: space-evenly;
-    text-align: center;
+  position: relative;
+  z-index: 3;
+  flex: 0 0 20%;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  @media (max-width: 1200px) {
+    flex: 0 0 30%;
+  }
+  @media (max-width: 768px) {
+    flex: 0 0 50%;
+    flex-direction: row;
   }
 `;
 const StyledTitle = styled('div')`
-  && {
-    position: relative;
-    font-family: 'Montserrat';
-    color: white;
-    font-weight: bolder;
-    font-size: 20px;
-    padding: 15px;
-  }
-`;
-const Desc = styled.div`
+  font-family: 'Boogaloo', cursive;
   position: relative;
-  font-family: 'Montserrat';
   color: white;
-
   font-size: 20px;
   padding: 15px;
-  width: 265px;
-  align-items: center;
-  font-size: 16px;
 `;
-
+const Desc = styled.div`
+  font-size: 20px;
+  font-size: 16px;
+  max-width: 90%;
+`;
+const Title = styled.div`
+  font-size: 20px;
+  font-size: 16px;
+  max-width: 90%;
+`;
 //{this.props.gameName === 'lava' && <Button>Enable lava</Button>}
 //{}
 

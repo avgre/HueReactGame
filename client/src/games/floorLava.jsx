@@ -3,22 +3,8 @@ import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Console from '../components/Console.jsx';
-import { ReactComponent as Bg } from '../images/redlightbg2.svg';
+import { ReactComponent as Bg } from '../images/redlightbg.svg';
 
-const Background = styled(Bg)`
-  width: 100%;
-  height: 92vh;
-  transform: scale(1);
-  @media (max-width: 1200px) {
-    width: 110%;
-  }
-  @media (max-width: 800px) {
-    top: 0;
-  }
-  @media (max-width: 320px) {
-    transform: scale(0.5);
-  }
-`;
 function getRandom(min, max) {
   const random = Math.random() * (max - min) + min;
   console.log(random);
@@ -179,10 +165,8 @@ class FloorLava extends Component {
 
   render() {
     return (
-      <StyledDispWrapper>
-        <Container id="wrapper">
-          <Background />
-        </Container>
+      <Container>
+        <Background />
         <Console
           isRunning={this.state.gameStart}
           gameName="redlight"
@@ -192,22 +176,34 @@ class FloorLava extends Component {
             this.props.currentColor === 'green' ? '#008000' : '#FF0000'
           }
         />
-      </StyledDispWrapper>
+      </Container>
     );
   }
 }
-const StyledDispWrapper = styled('div')`
-  && {
-    position: relative;
-    display: flex;
-    z-index: 1;
-    width: 100%;
-    height: 92vh;
+
+const Container = styled('div')`
+  display: flex;
+  max-height: 92vh;
+  height: 92vh;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
-const Container = styled('div')`
+
+const Background = styled(Bg)`
   width: 100%;
-  position: relative;
+  height: 100%;
+  flex: 0 0 80%;
+  @media (max-width: 1200px) {
+    flex: 0 0 70%;
+  }
+  @media (max-width: 800px) {
+    flex: 0 0 50%;
+  }
+  @media (max-width: 320px) {
+  }
 `;
 
 const mapStateToProps = (state) => {
