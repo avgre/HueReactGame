@@ -4,19 +4,17 @@ import styled from 'styled-components';
 import GameBox from './gameBox.jsx';
 
 const StyledGameMenu = styled('div')`
-  && {
-    position: relative;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    background: #512da8ff;
-    z-index: 1;
-    justify-content: space-between;
-    width: auto;
-    height: 92vh;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  background: #512da8ff;
+  z-index: 1;
+  justify-content: space-between;
+  width: auto;
+  height: 92vh;
+  padding-left: 50px;
+  padding-right: 50px;
 `;
 
 class GameMenu extends Component {
