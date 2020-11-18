@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import Console from '../components/Console.jsx';
+import Console from '../components/console.jsx';
 import Sound from 'react-sound';
 
 function chooseBulbie(currentColor, id) {

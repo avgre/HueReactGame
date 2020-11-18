@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import Console from '../components/Console.jsx';
+import Console from '../components/console.jsx';
 import Sound from 'react-sound';
 import { ReactComponent as Bg } from '../images/redlightbg1.svg';
+import { createGameArray } from '../helpers/gameArray.js';
 
 const Background = styled(Bg)`
   width: auto;
-  max-height: 92vh;
   overflow: hidden;
 `;
 function chooseBulbie(currentColor, id) {
@@ -25,62 +25,6 @@ function chooseBulbie(currentColor, id) {
   } else if (currentColor === 'red' && id === 3) {
     return '/images/yellow-animation-stop.svg';
   }
-}
-
-function chooseObjColor(currentColor, object) {
-  if (currentColor === 'green' && object === 'stoplight') {
-    return '/images/greenlight.svg';
-  } else if (currentColor === 'red' && object === 'stoplight') {
-    return '/images/redlight.svg';
-  } else if (currentColor === 'red' && object === 'blimp') {
-    return '/images/blimpstop.svg';
-  } else if (currentColor === 'green' && object === 'blimp') {
-    return '/images/blimpgo.svg';
-  }
-}
-function divideSegments(number, parts, min) {
-  const randombit = number - min * parts;
-  const out = [];
-  for (var i = 0; i < parts; i++) {
-    out.push(Math.random());
-  }
-  const mult =
-    randombit /
-    out.reduce(function (a, b) {
-      return a + b;
-    });
-  return out.map(function (el) {
-    return el * mult + min;
-  });
-}
-function addDelay(array, type) {
-  let delay = 2000;
-  if (type === 'pos') {
-    delay = 0;
-  }
-  var newArr = [...array]
-    .map((e, i) => (i < array.length - 1 ? [e, delay] : [e]))
-    .reduce((a, b) => a.concat(b));
-  return newArr;
-}
-function sumArray(array) {
-  const result = array.reduce((acc, item, index) => {
-    if (index === 0) {
-      acc.push(item);
-    } else {
-      acc.push(acc[index - 1] + item);
-    }
-    return acc;
-  }, []);
-  return result;
-}
-function addZero(array, type) {
-  let delay = 0;
-  if (type === 'time') {
-    delay = 2000;
-  }
-  array.unshift(delay);
-  return array;
 }
 
 class RedLight extends Component {
@@ -103,13 +47,14 @@ class RedLight extends Component {
   }
   componentDidMount() {
     //const wrapper = document.querySelector('#wrapper')
+
     this.props.dispatch({
       type: 'INITIALIZE_GAME',
       payload: 'redlight',
     });
     this.changeLightColor(
       'red',
-      this.hubIp + '/api/' + this.user + '/groups/6/action'
+      this.hubIp + '/api/' + this.user + '/lights/4/state'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
@@ -117,23 +62,15 @@ class RedLight extends Component {
 
     this.setState({
       segments: segments,
-      timeSegments: addZero(
-        sumArray(addDelay(divideSegments(14000, segments, 1000))),
-        'time'
-      ),
-      posSegments1: addZero(
-        sumArray(addDelay(divideSegments(2000, segments, 200), 'pos'))
-      ),
-      posSegments2: addZero(
-        sumArray(addDelay(divideSegments(2000, segments, 100), 'pos'))
-      ),
-      posSegments3: addZero(
-        sumArray(addDelay(divideSegments(2000, segments, 25), 'pos'))
-      ),
+      timeSegments: createGameArray(10000, segments, 1000, 'time'),
+      posSegments1: createGameArray(2000, segments, 200, 'pos'),
+      posSegments2: createGameArray(2000, segments, 100, 'pos'),
+      posSegments3: createGameArray(2000, segments, 25, 'pos'),
     });
   }
   changeLightColor(nextColor, hubUrl) {
     console.log(nextColor);
+
     if (nextColor === 'green') {
       return fetch(hubUrl, {
         method: 'PUT',
@@ -149,7 +86,7 @@ class RedLight extends Component {
     console.log('The game is done!');
     this.changeLightColor(
       'red',
-      this.hubIp + '/api/' + this.user + '/groups/6/action'
+      this.hubIp + '/api/' + this.user + '/lights/4/state'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
@@ -175,7 +112,7 @@ class RedLight extends Component {
             this.state.timeSegments[i] - this.state.timeSegments[i - 1],
         });
 
-        const hubUrl = this.hubIp + '/api/' + this.user + '/groups/6/action';
+        const hubUrl = this.hubIp + '/api/' + this.user + '/lights/4/state';
         const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
         this.changeLightColor(nextColor, hubUrl).then(() => {
           this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
@@ -222,28 +159,7 @@ class RedLight extends Component {
             volume={50}
           />
           <Sound url="./sounds/runsound.mp3" playStatus={soundPlaying} />
-          {/* <Stoplight
-            style={{
-              backgroundImage: `url(${chooseObjColor(
-                this.props.currentColor,
-                'stoplight'
-              )})`,
-            }}
-          ></Stoplight> */}
-          {/* {this.state.gameStart === true ? (
-            <BlimpBox>
-              <Blimp
-                style={{
-                  backgroundImage: `url(${chooseObjColor(
-                    this.props.currentColor,
-                    'blimp'
-                  )})`,
-                }}
-              ></Blimp>
-            </BlimpBox>
-          ) : (
-            <div></div>
-          )} */}
+
           <AnimationDiv1
             style={{
               transition: `transform ${timing}ms linear`,
@@ -396,60 +312,12 @@ const BlueBulbie = styled('div')`
     border: none;
   }
 `;
-const blink = keyframes`
-      100% {
-        background-position: 400px;
-      }
-`;
+
 function getRandom(min, max) {
   const random = Math.random() * (max - min) + min;
   console.log(random);
   return random;
 }
-function blimpfly() {
-  const fly = keyframes`
-    0% {
-      transform: translate(0px, ${getRandom(10, 60)}px);
-    }
-    25% {
-      transform: translate(600px, ${getRandom(10, 60)}px);   
-       }
-    50% {
-      transform: translate(1200px, ${getRandom(10, 60)}px);
-    }
-    75% {
-      transform: translate(1800px, ${getRandom(10, 60)}px);   
-    }
-    100% {
-      transform: translate(2400px, ${getRandom(10, 60)}px);   
-    }
-  `;
-  return fly;
-}
-const BlimpBox = styled('div')`
-  && {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 6;
-    animation: ${blimpfly()} 30s linear infinite;
-    border: none;
-    top: 10px;
-    left: -200px;
-    height: 100px;
-    width: 200px;
-  }
-`;
-const Blimp = styled('div')`
-  && {
-    height: 100px;
-    width: 200px;
-    background-image: url('/images/blimpstop.svg');
-    animation: ${blink} 1s steps(2) infinite;
-    border: none;
-  }
-`;
 
 const mapStateToProps = (state) => {
   return {

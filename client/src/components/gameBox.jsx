@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Button from './Button.jsx';
+import Button from './button.jsx';
 
 const StyledWrapper = styled.div`
   padding-top: 40px;

@@ -8,7 +8,7 @@ const persistConfig = {
 };
 
 const initialState = {
-  hubAddress: 'https://192.168.8.2',
+  hubAddress: 'https://192.168.8.3',
   hubUsername: 'ljgib-WhZLVQlF75mM89U9ktZdpLQpahq8lI8ID7',
   gameName: '',
   globalOptions: {

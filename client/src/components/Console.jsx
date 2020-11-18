@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Button from './Button.jsx';
+import Button from './button.jsx';
 import { connect } from 'react-redux';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
@@ -44,6 +44,29 @@ class Console extends Component {
             </TimerWrapper>
           </>
         )}
+        {this.props.gameName === 'floorislava' && (
+          <>
+            <Title>
+              <StyledTitle>The Floor is Lava!</StyledTitle>
+              <Desc>
+                Red means fire! Find somewhere to stay safe when the light is
+                blue. You're out if the lava catches you!
+              </Desc>
+            </Title>
+
+            <TimerWrapper>
+              <CountdownCircleTimer
+                isPlaying={this.props.isRunning}
+                duration={this.props.duration}
+                colors={[[this.props.timerColor]]}
+                onComplete={() => [false, 1000]}
+                trailColor={'#32AB9A'}
+              >
+                {renderTime}
+              </CountdownCircleTimer>
+            </TimerWrapper>
+          </>
+        )}
         <Button onClick={this.props.handleStartGame}>PLAY</Button>
       </StyledConsole>
     );
@@ -69,6 +92,7 @@ const Timer = styled('div')`
 
 const StyledConsole = styled('div')`
   position: relative;
+  padding: 10vh 0;
   z-index: 3;
   flex: 0 0 20%;
   z-index: 6;
@@ -83,7 +107,11 @@ const StyledConsole = styled('div')`
     flex: 0 0 30%;
   }
   @media (max-width: 768px) {
-    flex: 0 0 50%;
+    flex: 0 0 45%;
+    flex-direction: row;
+  }
+  @media (max-width: 480px) {
+    flex: 0 0 55%;
     flex-direction: row;
   }
 `;
@@ -93,6 +121,7 @@ const StyledTitle = styled('div')`
   color: white;
   font-size: 20px;
   padding: 15px;
+  font-variant: small-caps;
 `;
 const Desc = styled.div`
   font-size: 20px;
@@ -103,6 +132,9 @@ const Title = styled.div`
   font-size: 20px;
   font-size: 16px;
   max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 //{this.props.gameName === 'lava' && <Button>Enable lava</Button>}
 //{}

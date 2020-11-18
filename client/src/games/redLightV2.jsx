@@ -3,53 +3,33 @@ import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Console from '../components/console.jsx';
-import { ReactComponent as Bg } from '../images/livingroom.svg';
+import Sound from 'react-sound';
+import { ReactComponent as Bg } from '../images/trackrun.svg';
 
-class FloorLava extends Component {
+class RedLight extends Component {
   constructor(props) {
     super(props);
     this.hubIp = this.props.hubIp;
     this.user = this.props.user;
     this.currentColor = this.props.currentColor;
-    this.state = {
-      gameStart: false,
-    };
+    this.state = {};
+    this.ref = React.createRef();
   }
+
   componentDidMount() {
-    this.props.dispatch({
-      type: 'INITIALIZE_GAME',
-      payload: 'floorislava',
-    });
-    this.changeLightColor(
-      'blue',
-      this.hubIp + '/api/' + this.user + '/lights/4/action'
-    ).then(() => {
-      this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'blue' });
-    });
-  }
-  changeLightColor(nextColor, hubUrl) {
-    console.log(nextColor);
-    if (nextColor === 'blue') {
-      return fetch(hubUrl, {
-        method: 'PUT',
-        body: '{"transitiontime":' + 0 + ',"hue":' + 8402 + '}',
-      });
-    } else
-      return fetch(hubUrl, {
-        method: 'PUT',
-        body: '{"transitiontime":' + 0 + ',"hue":' + 0 + '}',
-      });
+    const { current } = this.ref;
+    console.log(`${current.offsetWidth}, ${current.offsetHeight}`);
   }
   render() {
     return (
-      <Container>
+      <Container ref={this.ref}>
         <Background />
         <Console
           isRunning={this.state.gameStart}
-          gameName="floorislava"
-          duration={90}
+          gameName="redlight"
+          duration={30}
           timerColor={
-            this.props.currentColor === 'blue' ? '#008000' : '#FF0000'
+            this.props.currentColor === 'green' ? '#008000' : '#FF0000'
           }
         />
       </Container>
@@ -57,6 +37,33 @@ class FloorLava extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    hubIp: state.hubAddress,
+    user: state.hubUsername,
+    currentColor: state.currentColor,
+  };
+};
+
+export default connect(mapStateToProps)(RedLight);
+
+const run = keyframes`
+100% {
+  background-position: 800px;
+}
+`;
+const BlueBulbie = styled('div')`
+  && {
+    z-index: 5;
+    transform: scale(1.3);
+    width: 100px;
+    height: 145px;
+    background-image: url('/images/blue-animation-stop.svg');
+    animation: ${run} 1s steps(8) infinite;
+
+    border: none;
+  }
+`;
 const Container = styled('div')`
   display: flex;
   max-height: 92vh;
@@ -67,33 +74,29 @@ const Container = styled('div')`
     flex-direction: column;
   }
   @media (max-width: 480px) {
+    flex-direction: column;
   }
 `;
 
 const Background = styled(Bg)`
   width: 100%;
-  height: 100%;
+  height: auto;
   flex: 0 0 80%;
+  overflow: visible;
   @media (max-width: 1200px) {
     flex: 0 0 70%;
   }
   @media (max-width: 768px) {
-    flex: 0 0 50%;
+    flex: 0 0 55%;
   }
   @media (max-width: 480px) {
     flex: 0 0 45%;
   }
 `;
-
-const mapStateToProps = (state) => {
-  return {
-    hubIp: state.hubAddress,
-    user: state.hubUsername,
-    currentColor: state.currentColor,
-  };
-};
-
-export default connect(mapStateToProps)(FloorLava);
+const Style = styled.div`
+  flex: 0 0 80%;
+  overflow: visible;
+`;
 
 //handleTick = () => {
 // get current time index
