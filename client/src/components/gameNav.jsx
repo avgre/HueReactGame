@@ -52,11 +52,10 @@ function Navbar() {
   return (
     <StyledNavbar>
       <StyledTitle>GAMES WITH HUE</StyledTitle>
-      {/* <FlexLink>
+      <FlexLink>
         <StyledLink to={'/'}>HOME</StyledLink>
-        <StyledLink to={'/'}>SETTINGS</StyledLink>
-        <StyledLink to={'/'}>ACCOUNT</StyledLink>
-      </FlexLink> */}
+        <StyledLink to={'/settings'}>SETTINGS</StyledLink>
+      </FlexLink>
     </StyledNavbar>
   );
 }

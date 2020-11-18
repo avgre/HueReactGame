@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Button from './button.jsx';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const StyledWrapper = styled.div`
   padding-top: 40px;
@@ -44,10 +46,18 @@ const StyledText = styled.div`
   max-width: 300px;
   font-size: 14px;
 `;
+const StyledLink = styled(Link)`
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+`;
 
 class GameBox extends Component {
   handleClick = (evt) => {
-    evt.preventDefault();
     console.log('whatthe');
   };
   render() {
@@ -58,10 +68,13 @@ class GameBox extends Component {
         </StyledBox>
         <StyledTitle>{this.props.game.name}</StyledTitle>
         <StyledText>{this.props.game.desc}</StyledText>
-        <Button onClick={this.handleClick}>Play</Button>
+
+        <Link to={'/' + this.props.game.slug}>
+          <Button onClick={this.handleClick}>Play</Button>
+        </Link>
       </StyledWrapper>
     );
   }
 }
 
-export default GameBox;
+export default withRouter(GameBox);
