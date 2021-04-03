@@ -26,6 +26,8 @@ function reducer(state = initialState, action) {
       return { ...state, gameName: action.payload };
     case 'CHANGE_COLOR':
       return { ...state, currentColor: action.payload };
+    case 'SET_BRIDGE_IP':
+      return { ...state, hubAddress: action.payload };
     default:
       return state;
   }

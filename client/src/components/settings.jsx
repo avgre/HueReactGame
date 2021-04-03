@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
 const StyledSettings = styled('div')`
   position: relative;
@@ -21,7 +22,10 @@ class Settings extends Component {
       .then((response) => response.json())
       .then((data) => {
         console.log(data[0].internalipaddress);
-        this.setState({ hueip: data[0].internalipaddress });
+        this.props.dispatch({
+          type: 'SET_BRIDGE_IP',
+          payload: data[0].internalipaddress,
+        });
       });
   }
   changeLightColor(hubUrl) {
@@ -45,7 +49,6 @@ class Settings extends Component {
     return;
   }
   render() {
-    let hueIP = this.state.hueip;
     return (
       <StyledSettings>
         <span>
@@ -54,7 +57,7 @@ class Settings extends Component {
         </span>
         <form>
           <label>
-            Name: {hueIP}
+            Name: {this.props.hubIp}
             <input type="text" name="name" />
           </label>
           <input type="submit" value="Submit" />
@@ -66,5 +69,12 @@ class Settings extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    hubIp: state.hubAddress,
+    user: state.hubUsername,
+    currentColor: state.currentColor,
+  };
+};
 
-export default Settings;
+export default connect(mapStateToProps)(Settings);
