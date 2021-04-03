@@ -3,8 +3,8 @@ import { keyframes } from 'styled-components';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Console from '../components/console.jsx';
-import Sound from 'react-sound';
-import { ReactComponent as Bg } from '../images/trackrun.svg';
+import { ReactComponent as Bg } from '../images/gradient-track.svg';
+import Container from '../components/container.js';
 
 class RedLight extends Component {
   constructor(props) {
@@ -17,16 +17,25 @@ class RedLight extends Component {
   }
 
   componentDidMount() {
-    const { current } = this.ref;
-    console.log(`${current.offsetWidth}, ${current.offsetHeight}`);
+    this.props.dispatch({
+      type: 'INITIALIZE_GAME',
+      payload: 'redlight',
+    });
+    const wrapper = document.querySelector('#wrapper');
+    console.log('client', wrapper.clientWidth + 'x' + wrapper.clientHeight);
+    const rectmain = document.querySelector('#rectmain');
+    const bboxRect = rectmain.getBoundingClientRect();
+    console.log('bbox', bboxRect);
+    const pink = document.querySelector('#pink');
+    console.log('pink', pink);
   }
   render() {
     return (
-      <Container ref={this.ref}>
-        <Background />
+      <Container>
+        <Background id="wrapper" ref={this.ref} />
         <Console
           isRunning={this.state.gameStart}
-          gameName="redlight"
+          gameName="floorislava"
           duration={30}
           timerColor={
             this.props.currentColor === 'green' ? '#008000' : '#FF0000'
@@ -47,39 +56,8 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps)(RedLight);
 
-const run = keyframes`
-100% {
-  background-position: 800px;
-}
-`;
-const BlueBulbie = styled('div')`
-  && {
-    z-index: 5;
-    transform: scale(1.3);
-    width: 100px;
-    height: 145px;
-    background-image: url('/images/blue-animation-stop.svg');
-    animation: ${run} 1s steps(8) infinite;
-
-    border: none;
-  }
-`;
-const Container = styled('div')`
-  display: flex;
-  max-height: 92vh;
-  height: 92vh;
-  @media (max-width: 1200px) {
-  }
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
-`;
-
 const Background = styled(Bg)`
-  width: 100%;
+  width: 80%;
   height: auto;
   flex: 0 0 80%;
   overflow: visible;
@@ -87,15 +65,12 @@ const Background = styled(Bg)`
     flex: 0 0 70%;
   }
   @media (max-width: 768px) {
+    width: 100%;
     flex: 0 0 55%;
   }
   @media (max-width: 480px) {
     flex: 0 0 45%;
   }
-`;
-const Style = styled.div`
-  flex: 0 0 80%;
-  overflow: visible;
 `;
 
 //handleTick = () => {

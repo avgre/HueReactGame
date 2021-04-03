@@ -10,9 +10,9 @@ const renderTime = ({ remainingTime }) => {
   }
   return (
     <Timer>
-      <span>Remaining</span>
+      {/* <span>Remaining</span> */}
       <Value>{remainingTime}</Value>
-      <span>seconds</span>
+      {/* <span>seconds</span> */}
     </Timer>
   );
 };
@@ -38,6 +38,8 @@ class Console extends Component {
                 colors={[[this.props.timerColor]]}
                 onComplete={() => [false, 1000]}
                 trailColor={'#311b92ff'}
+                size={100}
+                stroke={2}
               >
                 {renderTime}
               </CountdownCircleTimer>
@@ -61,23 +63,61 @@ class Console extends Component {
                 colors={[[this.props.timerColor]]}
                 onComplete={() => [false, 1000]}
                 trailColor={'#32AB9A'}
+                size={100}
+                stroke={2}
               >
                 {renderTime}
               </CountdownCircleTimer>
             </TimerWrapper>
           </>
         )}
-        <Button onClick={this.props.handleStartGame}>PLAY</Button>
+        <ConsoleBtn onClick={this.props.handleStartGame}>PLAY</ConsoleBtn>
       </StyledConsole>
     );
   }
 }
-
+const StyledConsole = styled('div')`
+  flex: 0 0 20%;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+  text-align: center;
+  @media (max-width: 1200px) {
+    flex: 0 0 30%;
+  }
+  @media (max-width: 768px) {
+    flex: 1 0 100%;
+  }
+  @media (max-width: 480px) {
+    flex: 0 0 55%;
+    flex-direction: row;
+  }
+`;
 const TimerWrapper = styled('div')`
   display: flex;
   justify-content: center;
   z-index: 7;
 `;
+const Title = styled.div`
+  font-size: 20px;
+  font-size: 16px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Open Sans', sans-serif;
+  color: white;
+  @media (max-width: 768px) {
+    flex: 0 0 100%;
+  }
+`;
+const ConsoleBtn = styled(Button)`
+  @media (max-width: 768px) {
+  }
+`;
+
 const Value = styled('div')`
   font-size: 40px;
   color: white;
@@ -90,31 +130,6 @@ const Timer = styled('div')`
   color: white;
 `;
 
-const StyledConsole = styled('div')`
-  position: relative;
-  padding: 10vh 0;
-  z-index: 3;
-  flex: 0 0 20%;
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  text-align: center;
-  font-family: 'Open Sans', sans-serif;
-  color: white;
-  @media (max-width: 1200px) {
-    flex: 0 0 30%;
-  }
-  @media (max-width: 768px) {
-    flex: 0 0 45%;
-    flex-direction: row;
-  }
-  @media (max-width: 480px) {
-    flex: 0 0 55%;
-    flex-direction: row;
-  }
-`;
 const StyledTitle = styled('div')`
   font-family: 'Boogaloo', cursive;
   position: relative;
@@ -128,14 +143,7 @@ const Desc = styled.div`
   font-size: 16px;
   max-width: 90%;
 `;
-const Title = styled.div`
-  font-size: 20px;
-  font-size: 16px;
-  max-width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+
 //{this.props.gameName === 'lava' && <Button>Enable lava</Button>}
 //{}
 

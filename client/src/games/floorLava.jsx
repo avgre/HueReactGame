@@ -16,16 +16,8 @@ class FloorLava extends Component {
     };
   }
   componentDidMount() {
-    this.props.dispatch({
-      type: 'INITIALIZE_GAME',
-      payload: 'floorislava',
-    });
-    this.changeLightColor(
-      'blue',
-      this.hubIp + '/api/' + this.user + '/lights/4/action'
-    ).then(() => {
-      this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'blue' });
-    });
+    const wrapper = document.querySelector('#wrapper');
+    console.log('client', wrapper.clientWidth + 'x' + wrapper.clientHeight);
   }
   changeLightColor(nextColor, hubUrl) {
     console.log(nextColor);
@@ -43,7 +35,9 @@ class FloorLava extends Component {
   render() {
     return (
       <Container>
-        <Background />
+        <SVGDiv>
+          <Background id="wrapper" />
+        </SVGDiv>
         <Console
           isRunning={this.state.gameStart}
           gameName="floorislava"
@@ -69,12 +63,17 @@ const Container = styled('div')`
   @media (max-width: 480px) {
   }
 `;
-
+const SVGDiv = styled.div`
+  max-width: 1440px;
+  max-height: 1024px;
+`;
 const Background = styled(Bg)`
+  max-width: 1440px;
+  max-height: 1024px;
   width: 100%;
   height: 100%;
-  flex: 0 0 80%;
-  @media (max-width: 1200px) {
+  /* flex: 0 0 80%; */
+  /* @media (max-width: 1200px) {
     flex: 0 0 70%;
   }
   @media (max-width: 768px) {
@@ -82,7 +81,7 @@ const Background = styled(Bg)`
   }
   @media (max-width: 480px) {
     flex: 0 0 45%;
-  }
+  } */
 `;
 
 const mapStateToProps = (state) => {

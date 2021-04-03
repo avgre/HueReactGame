@@ -8,11 +8,10 @@ const StyledGameMenu = styled('div')`
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  background: #512da8ff;
   z-index: 1;
   justify-content: space-between;
-  width: auto;
-  height: 92vh;
+  width: 100%;
+  height: auto;
   padding-left: 50px;
   padding-right: 50px;
 `;

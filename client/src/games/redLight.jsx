@@ -4,13 +4,10 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Console from '../components/console.jsx';
 import Sound from 'react-sound';
-import { ReactComponent as Bg } from '../images/redlightbg1.svg';
+import { ReactComponent as Bg } from '../images/gradient-track.svg';
 import { createGameArray } from '../helpers/gameArray.js';
+import Container from '../components/container.js';
 
-const Background = styled(Bg)`
-  width: auto;
-  overflow: hidden;
-`;
 function chooseBulbie(currentColor, id) {
   if (currentColor === 'green' && id === 1) {
     return '/images/blue-animation-run.svg';
@@ -46,27 +43,32 @@ class RedLight extends Component {
     };
   }
   componentDidMount() {
-    //const wrapper = document.querySelector('#wrapper')
-
+    const rectmain = document.querySelector('#rectmain');
+    const bboxRect = rectmain.getBoundingClientRect();
+    console.log('bbox', bboxRect.width);
     this.props.dispatch({
       type: 'INITIALIZE_GAME',
       payload: 'redlight',
     });
     this.changeLightColor(
       'red',
-      this.hubIp + '/api/' + this.user + '/lights/4/state'
+      this.hubIp + '/api/' + this.user + '/lights/10/state'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
     let segments = 8;
-
+    let distance = bboxRect.width - bboxRect.width * 0.1;
+    let spread1 = distance / segments + 3;
+    let spread2 = distance / segments - 3;
+    let spread3 = distance / segments;
     this.setState({
       segments: segments,
-      timeSegments: createGameArray(10000, segments, 1000, 'time'),
-      posSegments1: createGameArray(2000, segments, 200, 'pos'),
-      posSegments2: createGameArray(2000, segments, 100, 'pos'),
-      posSegments3: createGameArray(2000, segments, 25, 'pos'),
+      timeSegments: createGameArray(14000, segments, 1000, 'time'),
+      posSegments1: createGameArray(distance, segments, spread1, 'pos'),
+      posSegments2: createGameArray(distance, segments, spread2, 'pos'),
+      posSegments3: createGameArray(distance, segments, spread3, 'pos'),
     });
+    console.log(this.state);
   }
   changeLightColor(nextColor, hubUrl) {
     console.log(nextColor);
@@ -86,7 +88,7 @@ class RedLight extends Component {
     console.log('The game is done!');
     this.changeLightColor(
       'red',
-      this.hubIp + '/api/' + this.user + '/lights/4/state'
+      this.hubIp + '/api/' + this.user + '/lights/10/state'
     ).then(() => {
       this.props.dispatch({ type: 'CHANGE_COLOR', payload: 'red' });
     });
@@ -112,7 +114,7 @@ class RedLight extends Component {
             this.state.timeSegments[i] - this.state.timeSegments[i - 1],
         });
 
-        const hubUrl = this.hubIp + '/api/' + this.user + '/lights/4/state';
+        const hubUrl = this.hubIp + '/api/' + this.user + '/lights/10/state';
         const nextColor = this.props.currentColor === 'red' ? 'green' : 'red';
         this.changeLightColor(nextColor, hubUrl).then(() => {
           this.props.dispatch({ type: 'CHANGE_COLOR', payload: nextColor });
@@ -142,24 +144,23 @@ class RedLight extends Component {
         : this.state.currentPos3;
     const timing =
       this.props.currentColor === 'green' ? this.state.deltaTime : 2000;
-    const soundPlaying =
-      this.state.gameStart === false
-        ? Sound.status.STOPPED
-        : Sound.status.PLAYING;
-    const pauseSoundPlaying =
-      this.state.gameStart === true
-        ? Sound.status.STOPPED
-        : Sound.status.PLAYING;
+    // const soundPlaying =
+    //   this.state.gameStart === false
+    //     ? Sound.status.STOPPED
+    //     : Sound.status.PLAYING;
+    // const pauseSoundPlaying =
+    //   this.state.gameStart === true
+    //     ? Sound.status.STOPPED
+    //     : Sound.status.PLAYING;
     return (
-      <StyledDispWrapper>
-        <Container id="wrapper">
-          <Sound
-            url="./sounds/MeetingPlaceSCC.mp3"
-            playStatus={pauseSoundPlaying}
-            volume={50}
-          />
-          <Sound url="./sounds/runsound.mp3" playStatus={soundPlaying} />
-
+      <Container id="wrapper">
+        {/* <Sound
+          url="./sounds/MeetingPlaceSCC.mp3"
+          playStatus={pauseSoundPlaying}
+          volume={50}
+        />
+        <Sound url="./sounds/runsound.mp3" playStatus={soundPlaying} /> */}
+        <BgDiv>
           <AnimationDiv1
             style={{
               transition: `transform ${timing}ms linear`,
@@ -206,7 +207,7 @@ class RedLight extends Component {
             />
           </AnimationDiv3>
           <Background />
-        </Container>
+        </BgDiv>
         <Console
           isRunning={this.state.gameStart}
           gameName="redlight"
@@ -215,53 +216,69 @@ class RedLight extends Component {
           timerColor={
             this.props.currentColor === 'green' ? '#008000' : '#FF0000'
           }
-        />
-      </StyledDispWrapper>
+        />{' '}
+      </Container>
     );
   }
 }
-const StyledDispWrapper = styled('div')`
-  && {
-    position: relative;
-    display: flex;
-    z-index: 1;
-    width: 100%;
-    height: 92vh;
+
+const BgDiv = styled.div`
+  position: relative;
+  flex: 0 0 80%;
+  @media (max-width: 1200px) {
+    flex: 0 0 70%;
+  }
+  @media (max-width: 768px) {
+    flex: 0 0 100%;
   }
 `;
-const Container = styled('div')`
-  && {
-    width: 100%;
-    height: 92vh;
-    position: relative;
-  }
+
+const Background = styled(Bg)`
+  width: 100%;
+  height: auto;
 `;
+
 const AnimationDiv1 = styled('div')`
-  width: 160px;
-  height: 160px;
-  top: 100px;
+  bottom: 30%;
   position: absolute;
-  display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
+    left: -3%;
+    bottom: 20%;
+  }
+  @media (max-width: 480px) {
+  }
 `;
 const AnimationDiv2 = styled('div')`
-  width: 160px;
-  height: 160px;
-  top: 200px;
+  bottom: 0%;
   position: absolute;
-  display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
+    left: -5%;
+    bottom: -5%;
+  }
+  @media (max-width: 480px) {
+  }
 `;
 const AnimationDiv3 = styled('div')`
-  width: 160px;
-  height: 160px;
-  top: 300px;
+  bottom: 15%;
   position: absolute;
-  display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
+    left: -5%;
+    bottom: 4%;
+  }
+  @media (max-width: 480px) {
+  }
 `;
 const run = keyframes`
 100% {
@@ -279,45 +296,57 @@ const run3 = keyframes`
       }
 `;
 const PinkBulbie = styled('div')`
-  && {
-    z-index: 4;
-    transform: scale(0.9);
-    top: 200px;
-    width: 120px;
-    height: 120px;
-    background-image: url('/images/pink-animation-stop.svg');
-    animation: ${run2} 1s steps(8) infinite;
-    border: none;
+  z-index: 4;
+  width: 120px;
+  height: 120px;
+  background-image: url('/images/pink-animation-stop.svg');
+  animation: ${run2} 1s steps(8) infinite;
+  transform: scale(0.8);
+
+  @media (max-width: 1200px) {
+    transform: scale(0.6);
+  }
+  @media (max-width: 768px) {
+    transform: scale(0.4);
+  }
+  @media (max-width: 480px) {
+    transform: scale(0.3);
   }
 `;
 const YellowBulbie = styled('div')`
-  && {
-    z-index: 10;
-    transform: scale(0.8);
-    width: 110px;
-    height: 155px;
-    background-image: url('/images/yellow-animation-stop.svg');
-    animation: ${run3} 1.6s steps(8) infinite;
+  z-index: 10;
+  transform: scale(0.8);
+  width: 110px;
+  height: 155px;
+  background-image: url('/images/yellow-animation-stop.svg');
+  animation: ${run3} 1.6s steps(8) infinite;
+  @media (max-width: 1200px) {
+    transform: scale(0.6);
+  }
+  @media (max-width: 768px) {
+    transform: scale(0.4);
+  }
+  @media (max-width: 480px) {
+    transform: scale(0.3);
   }
 `;
 const BlueBulbie = styled('div')`
-  && {
-    z-index: 5;
-    transform: scale(1.3);
-    width: 100px;
-    height: 145px;
-    background-image: url('/images/blue-animation-stop.svg');
-    animation: ${run} 1s steps(8) infinite;
-
-    border: none;
+  z-index: 5;
+  transform: scale(0.8);
+  width: 100px;
+  height: 145px;
+  background-image: url('/images/blue-animation-stop.svg');
+  animation: ${run} 1s steps(8) infinite;
+  @media (max-width: 1200px) {
+    transform: scale(0.6);
+  }
+  @media (max-width: 768px) {
+    transform: scale(0.4);
+  }
+  @media (max-width: 480px) {
+    transform: scale(0.3);
   }
 `;
-
-function getRandom(min, max) {
-  const random = Math.random() * (max - min) + min;
-  console.log(random);
-  return random;
-}
 
 const mapStateToProps = (state) => {
   return {
@@ -328,15 +357,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(RedLight);
-
-//handleTick = () => {
-// get current time index
-// Process
-//const nextSegmentIndex = this.state.segmentIndex + 1;
-
-//this.setState({
-//  segmentIndex: nextSegmentIndex,
-//});
-
-//this.timeoutId = this.setTimeout(this.handleTick, this.state.timeSegments[nextSegmentIndex]);
-//};

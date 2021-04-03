@@ -14,12 +14,11 @@ const StyledWrapper = styled.div`
   overflow: hidden;
   text-align: center;
   width: 380px;
-  height: 440px;
+  height: auto;
 `;
 const StyledBox = styled.div`
   position: relative;
   padding: 10px;
-  background: #512da8ff;
   z-index: 2;
   align-items: center;
   display: inline-block;
@@ -69,9 +68,9 @@ class GameBox extends Component {
         <StyledTitle>{this.props.game.name}</StyledTitle>
         <StyledText>{this.props.game.desc}</StyledText>
 
-        <Link to={'/' + this.props.game.slug}>
+        <StyledLink to={'/' + this.props.game.slug}>
           <Button onClick={this.handleClick}>Play</Button>
-        </Link>
+        </StyledLink>
       </StyledWrapper>
     );
   }

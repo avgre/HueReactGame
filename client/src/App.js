@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import Navbar from './components/gameNav.jsx';
 import GameMenu from './components/gameMenu.jsx';
 import Settings from './components/settings.jsx';
-import floorLava from './games/floorLava.jsx';
-import redLight from './games/redLightV2.jsx';
+import floorLava from './games/redLightV2.jsx';
+import redLight from './games/redLight.jsx';
 import musicalChairs from './games/musicalChairs.jsx';
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <Route path="/settins" exact component={Settings} />
+      <Route path="/settings" exact component={Settings} />
       <StyledDispWrapper>
         <Route path="/" exact component={GameMenu} />
         <Route path="/redlight" exact component={redLight} />
