@@ -8,8 +8,9 @@ const persistConfig = {
 };
 
 const initialState = {
-  hubAddress: 'https://192.168.8.3',
-  hubUsername: 'ljgib-WhZLVQlF75mM89U9ktZdpLQpahq8lI8ID7',
+  hubAddress: undefined,
+  hubUsername: undefined,
+  lights: {},
   gameName: '',
   globalOptions: {
     players: 2,
@@ -28,6 +29,10 @@ function reducer(state = initialState, action) {
       return { ...state, currentColor: action.payload };
     case 'SET_BRIDGE_IP':
       return { ...state, hubAddress: action.payload };
+    case 'SET_USER':
+      return { ...state, hubUsername: action.payload };
+    case 'SET_LIGHTS':
+      return { ...state, lights: action.payload };
     default:
       return state;
   }
