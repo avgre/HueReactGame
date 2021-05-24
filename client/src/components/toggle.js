@@ -46,9 +46,9 @@ const Switch = ({ id, toggled, onChange }) => {
     <>
       <SwitchInput
         className="switch-checkbox"
+        type="checkbox"
         key={id}
         id={id}
-        type="checkbox"
         checked={toggled}
         onChange={onChange}
       />
