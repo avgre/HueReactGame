@@ -16,12 +16,10 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Route path="/settings" exact component={Settings} />
-      <StyledDispWrapper>
-        <Route path="/" exact component={GameMenu} />
-        <Route path="/redlight" exact component={redLight} />
-        <Route path="/floorislava" exact component={floorLava} />
-        {/* <Route path="/musicalchairs" exact component={musicalChairs} /> */}
-      </StyledDispWrapper>
+      <Route path="/" exact component={GameMenu} />
+      <Route path="/redlight" exact component={redLight} />
+      <Route path="/floorislava" exact component={floorLava} />
+      {/* <Route path="/musicalchairs" exact component={musicalChairs} /> */}
     </BrowserRouter>
   );
 }
