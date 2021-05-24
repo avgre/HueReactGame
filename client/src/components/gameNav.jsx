@@ -19,7 +19,7 @@ const StyledLink = styled(Link)`
   padding: 10px;
   text-decoration: none;
   color: white;
-  font-family: 'Montserrat';
+  font-family: 'Boogaloo', cursive;
   &:focus,
   &:hover,
   &:visited,
