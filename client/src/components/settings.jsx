@@ -30,14 +30,15 @@ import LightControl from './settingsLight.js';
 class Settings extends Component {
   constructor(props) {
     super(props);
-
+    this.requestFailed = false;
     this.state = {
-      lights: {},
       show: false,
-      responseFailed: false,
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
+    this.onToggleLight = this.onToggleLight.bind(this);
+    this.onBrightnessChanged = this.onBrightnessChanged.bind(this);
+    this.fetchLights = this.fetchLights.bind(this);
   }
   showModal = () => {
     this.setState({ show: true });
@@ -61,12 +62,12 @@ class Settings extends Component {
       throw new Error('Network request failed');
     }
     let bridgeLights = await response.json();
-    console.log(bridgeLights);
     this.props.dispatch({
       type: 'SET_LIGHTS',
       payload: bridgeLights,
     });
   };
+
   fetchIP = async () => {
     console.log('fetchIP called');
     const response = await fetch('https://discovery.meethue.com/');
@@ -81,7 +82,7 @@ class Settings extends Component {
 
     this.fetchLights(bridgeIP[0].internalipaddress);
   };
-  componentDidUpdate() {}
+
   checkHueData = () => {
     if (this.props.user && this.props.hubIp) {
     }
@@ -105,18 +106,54 @@ class Settings extends Component {
     this.fetchLights(this.props.hubIp);
   };
 
-  log = () => {
-    console.log(this.state);
+  changeLight = (id, bodyData) => {
+    const url =
+      'https://' +
+      this.props.hubIp +
+      '/api/' +
+      this.props.user +
+      '/lights/' +
+      id +
+      '/state';
+
+    fetch(url, { method: 'PUT', body: bodyData })
+      .then((response) => {
+        console.log('changestate');
+        if (!response.ok) {
+          throw Error('Network request failed');
+        }
+        return response;
+      })
+      .then(
+        (d) => {
+          this.requestFailed = false;
+          this.fetchLights(this.props.hubIp);
+        },
+        () => {
+          this.requestFailed = true;
+        }
+      )
+      .then();
   };
 
+  onToggleLight(id, isOn) {
+    const body = '{"on":' + !isOn + '}';
+    this.changeLight(id, body);
+  }
+
+  onBrightnessChanged(id, newValue) {
+    const body = '{"bri":' + newValue + '}';
+    this.changeLight(id, body);
+  }
+
   render() {
+    const toggleHandler = this.onToggleLight;
+    const brightnessHandler = this.onBrightnessChanged;
     const onchange = (data) => {
-      this.setState({ data });
-      console.log('Form>', data);
+      console.log('Selected Light:', data);
     };
     const data = this.props.lights;
     const lights = [];
-
     if (this.props.lights.length === 1) {
       console.log('error');
     } else {
@@ -131,18 +168,21 @@ class Settings extends Component {
             key={id}
             id={id}
             name={data[id].name}
-            isOn="false"
+            isOn={item.state.on}
             toggled={false}
             bri={item.state.bri}
+            onToggleLight={toggleHandler}
+            onBrightnessChanged={brightnessHandler}
           />
         );
-
         lights.push(light);
       });
     }
     return (
       <StyledSettings>
-        <button type="button" onClick={this.showModal}></button>
+        {/* <button type="button" onClick={this.showModal}>
+          SHOW
+        </button>
         <Modal show={this.state.show} handleClose={this.hideModal}>
           <form>
             <label>
@@ -155,28 +195,28 @@ class Settings extends Component {
             </label>
             <input type="submit" value="Submit" />
           </form>
-        </Modal>
+        </Modal> */}
         <AnimationDiv>
           <BlueBulbie />
           <Hub />
         </AnimationDiv>
-        <button onClick={this.createUser}>Set User</button>
-        <span>
-          Click <a href="https://discovery.meethue.com/">here</a> to find your
-          IP
-        </span>
+        <AnimationDiv>
+          <BlueBulbieOn />
+          <Hub />
+        </AnimationDiv>
+        <button onClick={this.createUser}>Connect</button>
+        <div>
+          <span>IP Address:</span>
+          <span>{this.props.hubIp}</span>
+        </div>
         <form>
           <label>
-            Name: {this.props.hubIp}
-            <input type="text" name="name" />
+            Authorization Token:
+            <input type="text" name="Auth Token" value={this.props.user} />
           </label>
           <input type="submit" value="Submit" />
         </form>
-
-        <button onClick={this.log}>log</button>
-
-        <span> Name: {this.props.user}</span>
-        <div>{lights}</div>
+        <LightFlex>{lights}</LightFlex>
       </StyledSettings>
     );
   }
@@ -194,15 +234,27 @@ export default connect(mapStateToProps)(Settings);
 
 const jump = keyframes`
 100% {
-  background-position: 700px;
+  background-position: 800px;
+}
+`;
+const on = keyframes`
+100% {
+  background-position: 500px;
 }
 `;
 const BlueBulbie = styled('div')`
   z-index: 5;
   width: 100px;
-  height: 140px;
+  height: 160px;
   background-image: url('/images/bulbie-jump.svg');
-  animation: ${jump} 1s steps(7) infinite;
+  animation: ${jump} 1.5s steps(8) infinite;
+`;
+const BlueBulbieOn = styled('div')`
+  z-index: 5;
+  width: 100px;
+  height: 160px;
+  background-image: url('/images/bulbie-on.svg');
+  animation: ${on} 1s steps(5) infinite;
 `;
 
 const AnimationDiv = styled('div')`
@@ -212,9 +264,21 @@ const AnimationDiv = styled('div')`
 `;
 
 const StyledSettings = styled('div')`
-  position: relative;
   background: #512da8ff;
   z-index: 1;
+  max-width: 100%;
+  height: auto;
+  background-image: radial-gradient(#322290 1.05px, #5138a4 1.05px);
+  background-size: 21px 21px;
+  padding: 2vw calc((100vw - 1200px) / 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const LightFlex = styled('div')`
   width: 100%;
-  height: 92vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 `;
