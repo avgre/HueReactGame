@@ -398,7 +398,6 @@ const blink = keyframes`
 `;
 function getRandom(min, max) {
   const random = Math.random() * (max - min) + min;
-  console.log(random);
   return random;
 }
 function blimpfly() {

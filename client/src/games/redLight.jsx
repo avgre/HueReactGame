@@ -7,6 +7,7 @@ import Sound from 'react-sound';
 import { ReactComponent as Bg } from '../images/gradient-track.svg';
 import { createGameArray } from '../helpers/gameArray.js';
 import Container from '../components/container.js';
+import DispWrapper from '../components/dispwrapper.js';
 
 function chooseBulbie(currentColor, id) {
   if (currentColor === 'green' && id === 1) {
@@ -153,71 +154,73 @@ class RedLight extends Component {
     //     ? Sound.status.STOPPED
     //     : Sound.status.PLAYING;
     return (
-      <Container id="wrapper">
-        {/* <Sound
+      <DispWrapper>
+        <Container id="wrapper">
+          {/* <Sound
           url="./sounds/MeetingPlaceSCC.mp3"
           playStatus={pauseSoundPlaying}
           volume={50}
         />
         <Sound url="./sounds/runsound.mp3" playStatus={soundPlaying} /> */}
-        <BgDiv>
-          <AnimationDiv1
-            style={{
-              transition: `transform ${timing}ms linear`,
-              transform: `translate(${characterPosition1}px)`,
-            }}
-          >
-            <BlueBulbie
+          <BgDiv>
+            <AnimationDiv1
               style={{
-                backgroundImage: `url(${chooseBulbie(
-                  this.props.currentColor,
-                  1
-                )})`,
+                transition: `transform ${timing}ms linear`,
+                transform: `translate(${characterPosition1}px)`,
               }}
-            />
-          </AnimationDiv1>
-          <AnimationDiv2
-            style={{
-              transition: `transform ${timing}ms linear`,
-              transform: `translate(${characterPosition2}px)`,
-            }}
-          >
-            <PinkBulbie
+            >
+              <BlueBulbie
+                style={{
+                  backgroundImage: `url(${chooseBulbie(
+                    this.props.currentColor,
+                    1
+                  )})`,
+                }}
+              />
+            </AnimationDiv1>
+            <AnimationDiv2
               style={{
-                backgroundImage: `url(${chooseBulbie(
-                  this.props.currentColor,
-                  2
-                )})`,
+                transition: `transform ${timing}ms linear`,
+                transform: `translate(${characterPosition2}px)`,
               }}
-            />
-          </AnimationDiv2>
-          <AnimationDiv3
-            style={{
-              transition: `transform ${timing}ms linear`,
-              transform: `translate(${characterPosition3}px)`,
-            }}
-          >
-            <YellowBulbie
+            >
+              <PinkBulbie
+                style={{
+                  backgroundImage: `url(${chooseBulbie(
+                    this.props.currentColor,
+                    2
+                  )})`,
+                }}
+              />
+            </AnimationDiv2>
+            <AnimationDiv3
               style={{
-                backgroundImage: `url(${chooseBulbie(
-                  this.props.currentColor,
-                  3
-                )})`,
+                transition: `transform ${timing}ms linear`,
+                transform: `translate(${characterPosition3}px)`,
               }}
-            />
-          </AnimationDiv3>
-          <Background />
-        </BgDiv>
-        <Console
-          isRunning={this.state.gameStart}
-          gameName="redlight"
-          handleStartGame={this.startGame}
-          duration={30}
-          timerColor={
-            this.props.currentColor === 'green' ? '#008000' : '#FF0000'
-          }
-        />{' '}
-      </Container>
+            >
+              <YellowBulbie
+                style={{
+                  backgroundImage: `url(${chooseBulbie(
+                    this.props.currentColor,
+                    3
+                  )})`,
+                }}
+              />
+            </AnimationDiv3>
+            <Background />
+          </BgDiv>
+          <Console
+            isRunning={this.state.gameStart}
+            gameName="redlight"
+            handleStartGame={this.startGame}
+            duration={30}
+            timerColor={
+              this.props.currentColor === 'green' ? '#008000' : '#FF0000'
+            }
+          />{' '}
+        </Container>
+      </DispWrapper>
     );
   }
 }
