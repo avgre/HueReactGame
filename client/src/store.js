@@ -11,6 +11,7 @@ const initialState = {
   hubAddress: undefined,
   hubUsername: undefined,
   lights: {},
+  selected: [],
   gameName: '',
   globalOptions: {
     players: 2,
@@ -33,6 +34,8 @@ function reducer(state = initialState, action) {
       return { ...state, hubUsername: action.payload };
     case 'SET_LIGHTS':
       return { ...state, lights: action.payload };
+    case 'SET_PLAYLIGHT':
+      return { ...state, selectedLights: action.payload };
     default:
       return state;
   }
