@@ -3,29 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { keyframes } from 'styled-components';
 import { ReactComponent as Hub } from '../images/hub.svg';
-import Modal from './modal.js';
 import LightControl from './settingsLight.js';
-
-// async function fetchLights() {
-//   let response = await fetch(
-//     'https://' + this.props.hubIp + '/api/' + this.props.user + '/lights'
-//   );
-//   console.log('response', response);
-//   if (!response.ok) {
-//     throw new Error('Network request failed');
-//   }
-//   let bridgeLights = await response.json();
-//   return bridgeLights;
-// }
-
-// async function fetchIP() {
-//   let response = await fetch('https://discovery.meethue.com/');
-//   if (!response.ok) {
-//     throw new Error(`HTTP error! status: ${response.status}`);
-//   }
-//   let bridgeIP = await response.json();
-//   return bridgeIP;
-// }
 
 class Settings extends Component {
   constructor(props) {
@@ -33,6 +11,7 @@ class Settings extends Component {
     this.requestFailed = false;
     this.state = {
       show: false,
+      setLight: 1,
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
@@ -48,7 +27,23 @@ class Settings extends Component {
     this.setState({ show: false });
     console.log(this.state);
   };
-
+  chooseAnimation = () => {
+    if (this.props.user) {
+      return (
+        <AnimationDiv>
+          <BlueBulbieOn />
+          <Hub />
+        </AnimationDiv>
+      );
+    } else {
+      return (
+        <AnimationDiv>
+          <BlueBulbie />
+          <Hub />
+        </AnimationDiv>
+      );
+    }
+  };
   componentDidMount() {
     if (this.props.user === undefined) this.fetchIP();
   }
@@ -147,12 +142,20 @@ class Settings extends Component {
   }
 
   render() {
+    const animation = this.chooseAnimation();
     const toggleHandler = this.onToggleLight;
     const brightnessHandler = this.onBrightnessChanged;
     const onchange = (data) => {
-      console.log('Selected Light:', data);
+      this.setState({ setLight: data });
+      console.log(this.state);
+    };
+    const selectLight = (id) => {
+      if (id === this.state.setLight) {
+        return false;
+      } else return true;
     };
     const data = this.props.lights;
+    console.log(this.props.lights);
     const lights = [];
     if (this.props.lights.length === 1) {
       console.log('error');
@@ -163,7 +166,6 @@ class Settings extends Component {
           <LightControl
             onchange={(e) => {
               onchange(e);
-              console.log(id, e);
             }}
             key={id}
             id={id}
@@ -173,6 +175,7 @@ class Settings extends Component {
             bri={item.state.bri}
             onToggleLight={toggleHandler}
             onBrightnessChanged={brightnessHandler}
+            setLight={selectLight(id)}
           />
         );
         lights.push(light);
@@ -180,43 +183,29 @@ class Settings extends Component {
     }
     return (
       <StyledSettings>
-        {/* <button type="button" onClick={this.showModal}>
-          SHOW
-        </button>
-        <Modal show={this.state.show} handleClose={this.hideModal}>
-          <form>
-            <label>
-              Hue Bridge IP Address:
-              <input type="text" name="Bridge IP" value={this.props.hubIp} />
-            </label>
-            <label>
-              Hue Bridge Username:
-              <input type="text" name="Bridge User" value={this.props.user} />
-            </label>
-            <input type="submit" value="Submit" />
-          </form>
-        </Modal> */}
-        <AnimationDiv>
-          <BlueBulbie />
-          <Hub />
-        </AnimationDiv>
-        <AnimationDiv>
-          <BlueBulbieOn />
-          <Hub />
-        </AnimationDiv>
-        <button onClick={this.createUser}>Connect</button>
-        <div>
-          <span>IP Address:</span>
-          <span>{this.props.hubIp}</span>
-        </div>
-        <form>
+        {animation}
+        {/* <button onClick={this.createUser}>Connect</button> */}
+        {/* <form>
           <label>
             Authorization Token:
             <input type="text" name="Auth Token" value={this.props.user} />
           </label>
           <input type="submit" value="Submit" />
-        </form>
-        <LightFlex>{lights}</LightFlex>
+        </form> */}
+        <SettingsFlex>
+          <InfoFlex>
+            <InfoIP>
+              <span>IP Address:</span>
+              <span>{this.props.hubIp}</span>
+            </InfoIP>
+            <InfoAuth>
+              <span>Authorization Token:</span>
+              <span>{this.props.user}</span>
+            </InfoAuth>
+          </InfoFlex>
+          <InfoSpan>Select a light to connect to the game</InfoSpan>
+          <LightsFlex>{lights}</LightsFlex>
+        </SettingsFlex>
       </StyledSettings>
     );
   }
@@ -270,15 +259,55 @@ const StyledSettings = styled('div')`
   height: auto;
   background-image: radial-gradient(#322290 1.05px, #5138a4 1.05px);
   background-size: 21px 21px;
-  padding: 2vw calc((100vw - 1200px) / 2);
+  padding: 2vw calc((100vw - 800px) / 2);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  color: white;
+  box-sizing: border-box;
 `;
 
-const LightFlex = styled('div')`
+const SettingsFlex = styled('div')`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+`;
+const LightsFlex = styled('div')`
+  flex: 0 0 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const InfoFlex = styled('div')`
+  flex: 0 0 100%;
+  margin-top: 40px;
+  height: 200px;
+  background: #322290;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+`;
+const InfoIP = styled('div')`
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+`;
+const InfoSpan = styled.span`
+  margin-top: 40px;
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const InfoAuth = styled('div')`
+  flex: 0 0 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 `;
