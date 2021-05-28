@@ -53,7 +53,7 @@ const Front = styled.span`
   position: relative;
   padding: 12px 42px;
   border-radius: 12px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: white;
   background: hsl(207deg 90% 54%);
   will-change: transform;
@@ -102,6 +102,22 @@ const getComponentForType = (type) => {
         <Shadow className="shadow"></Shadow>
         <Edge2 className="edge"></Edge2>
         <Front2 className="front">Connected</Front2>
+      </>
+    );
+  } else if (type === 'generate1') {
+    return (
+      <>
+        <Shadow className="shadow"></Shadow>
+        <Edge2 className="edge"></Edge2>
+        <Front2 className="front">Generate new token</Front2>
+      </>
+    );
+  } else if (type === 'generate2') {
+    return (
+      <>
+        <Shadow className="shadow"></Shadow>
+        <Edge2 className="edge"></Edge2>
+        <Front2 className="front">Generate</Front2>
       </>
     );
   } else {

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { keyframes } from 'styled-components';
 import { ReactComponent as Hub } from '../images/hub.svg';
 import LightControl from './settingsLight.js';
-
+import Button from './button3d.js';
+import SettingsInfo from './settingsInfo.js';
 class Settings extends Component {
   constructor(props) {
     super(props);
@@ -13,20 +14,20 @@ class Settings extends Component {
       show: false,
       setLight: 1,
     };
-    this.showModal = this.showModal.bind(this);
-    this.hideModal = this.hideModal.bind(this);
+    // this.showModal = this.showModal.bind(this);
+    // this.hideModal = this.hideModal.bind(this);
     this.onToggleLight = this.onToggleLight.bind(this);
     this.onBrightnessChanged = this.onBrightnessChanged.bind(this);
     this.fetchLights = this.fetchLights.bind(this);
   }
-  showModal = () => {
-    this.setState({ show: true });
-    console.log(this.state);
-  };
-  hideModal = () => {
-    this.setState({ show: false });
-    console.log(this.state);
-  };
+  // showModal = () => {
+  //   this.setState({ show: true });
+  //   console.log(this.state);
+  // };
+  // hideModal = () => {
+  //   this.setState({ show: false });
+  //   console.log(this.state);
+  // };
   chooseAnimation = () => {
     if (this.props.user) {
       return (
@@ -44,6 +45,7 @@ class Settings extends Component {
       );
     }
   };
+
   componentDidMount() {
     if (this.props.user === undefined) this.fetchIP();
   }
@@ -184,26 +186,13 @@ class Settings extends Component {
     return (
       <StyledSettings>
         {animation}
-        {/* <button onClick={this.createUser}>Connect</button> */}
-        {/* <form>
-          <label>
-            Authorization Token:
-            <input type="text" name="Auth Token" value={this.props.user} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form> */}
         <SettingsFlex>
-          <InfoFlex>
-            <InfoIP>
-              <span>IP Address:</span>
-              <span>{this.props.hubIp}</span>
-            </InfoIP>
-            <InfoAuth>
-              <span>Authorization Token:</span>
-              <span>{this.props.user}</span>
-            </InfoAuth>
-          </InfoFlex>
-          <InfoSpan>Select a light to connect to the game</InfoSpan>
+          <SettingsInfo
+            user={this.props.user}
+            ip={this.props.hubIp}
+            step={this.state.step}
+            create={this.createUser}
+          />
           <LightsFlex>{lights}</LightsFlex>
         </SettingsFlex>
       </StyledSettings>
@@ -237,6 +226,9 @@ const BlueBulbie = styled('div')`
   height: 160px;
   background-image: url('/images/bulbie-jump.svg');
   animation: ${jump} 1.5s steps(8) infinite;
+  position: absolute;
+  left: 33%;
+  bottom: 60%;
 `;
 const BlueBulbieOn = styled('div')`
   z-index: 5;
@@ -244,12 +236,16 @@ const BlueBulbieOn = styled('div')`
   height: 160px;
   background-image: url('/images/bulbie-on.svg');
   animation: ${on} 1s steps(5) infinite;
+  position: absolute;
+  left: 33%;
+  bottom: 60%;
 `;
 
 const AnimationDiv = styled('div')`
   position: relative;
   justify-content: center;
   align-items: center;
+  margin-top: 80px;
 `;
 
 const StyledSettings = styled('div')`
@@ -257,6 +253,7 @@ const StyledSettings = styled('div')`
   z-index: 1;
   max-width: 100%;
   height: auto;
+  min-height: 92vh;
   background-image: radial-gradient(#322290 1.05px, #5138a4 1.05px);
   background-size: 21px 21px;
   padding: 2vw calc((100vw - 800px) / 2);
@@ -265,6 +262,7 @@ const StyledSettings = styled('div')`
   justify-content: center;
   align-items: center;
   font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
   color: white;
   box-sizing: border-box;
 `;
@@ -280,34 +278,4 @@ const LightsFlex = styled('div')`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-`;
-
-const InfoFlex = styled('div')`
-  flex: 0 0 100%;
-  margin-top: 40px;
-  height: 200px;
-  background: #322290;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-`;
-const InfoIP = styled('div')`
-  flex: 0 0 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-`;
-const InfoSpan = styled.span`
-  margin-top: 40px;
-  flex: 0 0 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const InfoAuth = styled('div')`
-  flex: 0 0 70%;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
 `;

@@ -1,9 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Switch = ({ id, toggled, onChange }) => {
+const Switch = ({ id, toggled, onChange, color }) => {
+  const isOn = (status) => {
+    if (status) {
+      return 'On';
+    } else return 'Off';
+  };
   return (
-    <>
+    <Flex>
       <SwitchInput
         className="switch-checkbox"
         type="checkbox"
@@ -12,10 +17,17 @@ const Switch = ({ id, toggled, onChange }) => {
         checked={toggled}
         onChange={onChange}
       />
-      <SwitchLabel className="switch-label" htmlFor={id}>
+      <SwitchLabel
+        style={{
+          '--color': color,
+        }}
+        className="switch-label"
+        htmlFor={id}
+      >
         <SwitchButton className="switch-button" />
       </SwitchLabel>
-    </>
+      <Label>{isOn(toggled)}</Label>
+    </Flex>
   );
 };
 
@@ -35,9 +47,9 @@ const SwitchLabel = styled.label`
   width: 55px;
   height: 33px;
   border-radius: 100px;
-  border: 2px solid #2196f3;
+  border: 2px solid;
+  border-color: var(--color);
   position: relative;
-  transition: background-color 0.2s;
 `;
 
 const SwitchButton = styled.span`
@@ -50,7 +62,7 @@ const SwitchButton = styled.span`
   border-radius: 33px;
   transition: 0.2s;
   background: #2196f3;
-  box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+
   ${SwitchInput}:checked + ${SwitchLabel} & {
     background: #53a147;
     left: calc(100% - 2px);
@@ -59,4 +71,12 @@ const SwitchButton = styled.span`
   ${SwitchLabel}:active & {
     width: 45px;
   }
+`;
+
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const Label = styled.span`
+  margin-left: 10px;
 `;
