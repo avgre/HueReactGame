@@ -84,7 +84,7 @@ const ControlDiv = styled('div')`
   align-items: center;
 `;
 const StyledInput = styled('div')`
-  flex: 0 0 55%;
+  flex: 0 0 50%;
 `;
 const Input = styled('input')`
   margin-left: 0;
@@ -115,7 +115,7 @@ const Input = styled('input')`
   }
 `;
 const StyledToggle = styled('div')`
-  flex: 0 1 10%;
+  flex: 0 0 10%;
   height: 100%;
 `;
 const Title = styled.span`
